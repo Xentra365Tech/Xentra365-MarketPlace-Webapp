@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 
 const LoginPage = () => {
-  // --- State ---
+ 
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     emailOrPhone: '',
@@ -11,7 +11,7 @@ const LoginPage = () => {
     rememberMe: false
   });
 
-  // --- Handlers ---
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({

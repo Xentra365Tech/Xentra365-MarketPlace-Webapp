@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronDown, Eye, EyeOff } from 'lucide-react';
 import AuthLayout from '../components/AuthLayout';
 
-// Expanded list of countries for the dropdown
+
 const COUNTRIES = [
   { code: '+1', flag: '🇺🇸', label: 'USA' },
   { code: '+234', flag: '🇳🇬', label: 'Nigeria' },
@@ -23,7 +23,7 @@ const COUNTRIES = [
 ];
 
 const RegisterPage = () => {
-  // --- Form State ---
+ 
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -31,23 +31,23 @@ const RegisterPage = () => {
     password: ''
   });
 
-  // --- UI State ---
+ 
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
 
-  // --- Regex for Email Validation ---
+ 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   // It is invalid if they typed something, but it doesn't match the regex
   const isEmailInvalid = formData.email.length > 0 && !emailRegex.test(formData.email);
 
-  // --- Handlers ---
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
 
-    // Real-time password evaluation
+    
     if (name === 'password') {
       evaluatePassword(value);
     }
@@ -59,17 +59,17 @@ const RegisterPage = () => {
       setPasswordStrength(0);
       return;
     }
-    if (password.length >= 8) score += 1; // 1. Length > 8
-    if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score += 1; // 2. Upper & Lowercase
+    if (password.length >= 8) score += 1; 
+    if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score += 1; 
     if (/\d/.test(password)) score += 1; // 3. Numbers
-    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score += 1; // 4. Special Characters
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score += 1; 
 
     setPasswordStrength(score);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isEmailInvalid) return; // Prevent submission if email is bad
+    if (isEmailInvalid) return; 
     
     console.log("Submitting New Account:", { 
       ...formData, 
@@ -77,7 +77,7 @@ const RegisterPage = () => {
     });
   };
 
-  // --- Helpers for Password UI ---
+  
   const getStrengthColor = (level: number) => {
     if (passwordStrength >= level) {
       if (passwordStrength === 1) return 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]';
