@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 import AuthLayout from '../components/AuthLayout';
 
 const LoginPage = () => {
- 
+  const navigate = useNavigate();
+  
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     emailOrPhone: '',
     password: '',
     rememberMe: false
   });
 
-  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -22,8 +24,12 @@ const LoginPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Connect to backend here later
-    console.log("Login Submitting:", formData);
+    setIsLoading(true);
+    
+    // Simulate backend authentication delay, then route to Dashboard
+    setTimeout(() => {
+      navigate('/dashboard');
+    }, 1500);
   };
 
   const ShieldIcon = (
@@ -43,7 +49,6 @@ const LoginPage = () => {
         <p className="text-gray-400 text-sm mb-8 text-center lg:text-left">Enter your credentials to access your account.</p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Email Input */}
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Email or Phone</label>
             <input 
@@ -52,12 +57,12 @@ const LoginPage = () => {
               value={formData.emailOrPhone}
               onChange={handleInputChange}
               required
+              disabled={isLoading}
               placeholder="name@company.com" 
-              className="w-full bg-[#1E1E2C] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder-gray-600"
+              className="w-full bg-[#1E1E2C] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder-gray-600 disabled:opacity-50"
             />
           </div>
 
-          {/* Password Input */}
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Password</label>
             <div className="relative">
@@ -67,12 +72,14 @@ const LoginPage = () => {
                 value={formData.password}
                 onChange={handleInputChange}
                 required
+                disabled={isLoading}
                 placeholder="••••••••" 
-                className="w-full bg-[#1E1E2C] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder-gray-600 pr-16"
+                className="w-full bg-[#1E1E2C] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder-gray-600 pr-16 disabled:opacity-50"
               />
               <button 
                 type="button" 
                 onClick={() => setShowPassword(!showPassword)}
+                disabled={isLoading}
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-xs font-bold text-gray-400 hover:text-white transition-colors"
               >
                 {showPassword ? "HIDE" : "SHOW"}
@@ -80,7 +87,6 @@ const LoginPage = () => {
             </div>
           </div>
 
-          {/* Remember Me & Forgot Password */}
           <div className="flex items-center justify-between text-sm">
             <label className="flex items-center gap-2 cursor-pointer">
               <input 
@@ -88,6 +94,7 @@ const LoginPage = () => {
                 name="rememberMe"
                 checked={formData.rememberMe}
                 onChange={handleInputChange}
+                disabled={isLoading}
                 className="w-4 h-4 rounded border-gray-700 bg-[#1E1E2C] text-purple-600 focus:ring-purple-500" 
               />
               <span className="text-gray-400">Remember me</span>
@@ -95,23 +102,39 @@ const LoginPage = () => {
             <a href="#" className="text-blue-500 font-medium hover:text-blue-400 transition-colors">Forgot Password?</a>
           </div>
 
-          {/* Submit Button */}
-          <button type="submit" className="w-full bg-[#6324E2] hover:bg-[#501bb8] text-white font-semibold py-3.5 rounded-lg transition-colors mt-2">
-            Login
+          <button 
+            type="submit" 
+            disabled={isLoading}
+            className="w-full bg-[#6324E2] hover:bg-[#501bb8] text-white font-semibold py-3.5 rounded-lg transition-colors mt-2 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {isLoading ? <><Loader2 className="animate-spin" size={18} /> Authenticating...</> : 'Login'}
           </button>
         </form>
 
-        {/* Divider */}
         <div className="mt-8 mb-6 relative flex items-center justify-center">
           <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-800"></div></div>
           <div className="relative px-4 bg-[#13131D] text-xs font-bold text-gray-500 uppercase tracking-wider">Or continue with</div>
         </div>
 
-        {/* Social Logins */}
         <div className="flex justify-center gap-4 mb-8">
-          {['G', 'f', '⊞', ''].map((provider, i) => (
-            <button key={i} type="button" className="w-10 h-10 rounded-full bg-[#1E1E2C] border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-gray-500 hover:bg-[#2A2A38] transition-all">
-              {provider}
+          {[
+            { name: 'Google', src: '/google.svg' },
+            { name: 'Facebook', src: '/facebook.svg' },
+            { name: 'Outlook', src: '/outlook.svg' },
+            { name: 'Apple', src: '/apple.svg' }
+          ].map((provider, i) => (
+            <button 
+              key={i} 
+              type="button" 
+              disabled={isLoading}
+              className="w-10 h-10 rounded-full bg-[#1E1E2C] border border-gray-700 flex items-center justify-center hover:border-gray-500 hover:bg-[#2A2A38] transition-all overflow-hidden disabled:opacity-50"
+              aria-label={`Log in with ${provider.name}`}
+            >
+              <img 
+                src={provider.src} 
+                alt={`${provider.name} icon`} 
+                className={`w-5 h-5 object-contain ${provider.name === 'Apple' ? 'invert' : ''}`} 
+              />
             </button>
           ))}
         </div>
