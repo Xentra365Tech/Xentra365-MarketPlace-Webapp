@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Search, Bell, ShoppingCart, User, ChevronDown, Monitor, Shirt, 
-  Wrench, Code, Bot, Star, ShieldCheck, Zap, Grid, List, Clock, LogOut, Menu, X, Sun, Moon
+  Search, Bell, ShoppingCart, User, ChevronDown, Monitor,
+  Wrench, Code, ShieldCheck, Zap, LogOut, Menu, X, Sun, Moon
 } from 'lucide-react';
 
 const SIDEBAR_CATEGORIES = [
@@ -16,10 +16,6 @@ const PRODUCTS = [
   { id: 2, name: "Enterprise Security Token v4.0", price: "$89.00", rating: 4.9, image: "🔑" },
   { id: 3, name: "Quantum Core Neural Processor Units", price: "$4,500.00", rating: 5.0, image: "🧠", tag: "SPONSORED", fastShipping: true },
   { id: 4, name: "AcousticSeal Noise-Cancelling B2B", price: "$149.00", rating: 4.5, image: "🎧" },
-];
-
-const RECENT_ORDERS = [
-  { id: "#ORD-98211", name: "RTX 4090 Workstation", eta: "ETA: 2 Days", price: "$1,450.00", status: "SHIPPED", statusColor: "text-orange-400" },
 ];
 
 const DashboardPage = () => {
@@ -72,10 +68,10 @@ const DashboardPage = () => {
             </button>
 
             <button className={`${textMuted} hover:text-[#6324E2] flex flex-col items-center gap-1`}>
-              <Bell size={20} lg:size={18} />
+              <Bell size={20}  />
             </button>
             <button className={`${textMuted} hover:text-[#6324E2] flex flex-col items-center gap-1 relative`}>
-              <ShoppingCart size={20} lg:size={18} />
+              <ShoppingCart size={20} />
               <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
             

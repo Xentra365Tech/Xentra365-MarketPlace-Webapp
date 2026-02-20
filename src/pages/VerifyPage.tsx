@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import AuthLayout from '../components/AuthLayout';
@@ -84,7 +84,7 @@ const VerifyPage = () => {
             <div className="flex justify-between gap-2 max-w-sm mx-auto lg:mx-0">
               {otp.map((digit, index) => (
                 <input 
-                  key={index} ref={(el) => (inputRefs.current[index] = el)} type="text" inputMode="numeric" maxLength={1} value={digit}
+                  key={index} ref={(el) => { inputRefs.current[index] = el; }} type="text" inputMode="numeric" maxLength={1} value={digit}
                   onChange={(e) => handleChange(e, index)} onKeyDown={(e) => handleKeyDown(e, index)} onPaste={handlePaste} disabled={isLoading} placeholder="-"
                   className="w-10 h-12 sm:w-12 sm:h-14 bg-[#1E1E2C] border border-gray-700 rounded-lg text-center text-white text-xl focus:outline-none focus:border-purple-500 focus:bg-[#2A2A38] focus:ring-1 focus:ring-purple-500 transition-all placeholder-gray-600 disabled:opacity-50"
                 />

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Search, ShoppingCart, User, HelpCircle, Phone, Package, 
-  Smartphone, Monitor, Home, Shirt, Gamepad2, ChevronRight, ChevronDown, Star, Menu, X, Sun, Moon
+  Search, ShoppingCart, User, HelpCircle, Phone,
+  Smartphone, Monitor, Home, Shirt, Gamepad2, ChevronRight, ChevronDown, Menu, X, Sun, Moon
 } from 'lucide-react';
 
 // --- MOCK DATA ---
@@ -119,7 +119,7 @@ const LandingPage = () => {
               </Link>
               
               <Link to="/cart" className={`flex items-center gap-2 hover:text-[#6324E2] transition-colors relative py-2 ${textMuted}`}>
-                <ShoppingCart size={24} lg:size={20} />
+                <ShoppingCart size={24} />
                 <span className="font-medium hidden lg:block">Cart</span>
                 <span className="absolute top-0 lg:-top-2 -right-2 lg:-right-3 bg-red-500 text-xs w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-lg text-white">0</span>
               </Link>
