@@ -212,7 +212,7 @@ const LandingPage = () => {
                     {title}
                   </h3>
                   <ul className="space-y-3">
-                    {items.map((item, itemIdx) => (
+                    {items.map((item: string, itemIdx: number) => (
                       <li key={itemIdx}>
                         <a href="#" className="text-sm text-gray-400 hover:text-[#6324E2] transition-colors">{item}</a>
                       </li>
