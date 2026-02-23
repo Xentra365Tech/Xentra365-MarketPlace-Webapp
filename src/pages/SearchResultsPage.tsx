@@ -2,14 +2,17 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   Search, ShoppingCart, User, HelpCircle, ChevronDown, 
-  Menu, X, Grid, List, Star, Filter
+  Menu, X, ShieldCheck, Grid, List, Heart, Star, Filter, LogOut
 } from 'lucide-react';
 import { ALL_PRODUCTS } from '../data/mockData';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import Footer from '../components/Footer';
 
 const SearchResultsPage = () => {
   const navigate = useNavigate();
   const { cartCount } = useCart();
+  const { logout } = useAuth();
   const [searchParams] = useSearchParams();
   const userQuery = searchParams.get('q') || ''; 
 
@@ -20,13 +23,16 @@ const SearchResultsPage = () => {
   const [searchInput, setSearchInput] = useState(userQuery);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  // Live Autocomplete
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   const liveResults = searchInput.trim() === '' ? [] : ALL_PRODUCTS.filter(product => 
     product.name.toLowerCase().includes(searchInput.toLowerCase()) || 
     product.category.toLowerCase().includes(searchInput.toLowerCase())
   ).slice(0, 5);
 
-  // Main Page Filter
   const filteredProducts = ALL_PRODUCTS.filter(product => 
     product.name.toLowerCase().includes(userQuery.toLowerCase()) || 
     product.category.toLowerCase().includes(userQuery.toLowerCase())
@@ -35,12 +41,8 @@ const SearchResultsPage = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setSearchInput(val);
-    
-    if (val === '') {
-      navigate('/');
-    } else {
-      setShowDropdown(true);
-    }
+    if (val === '') navigate('/');
+    else setShowDropdown(true);
   };
 
   const handleSearch = (e?: React.FormEvent) => {
@@ -89,22 +91,17 @@ const SearchResultsPage = () => {
 
   return (
     <div className="min-h-screen w-screen bg-[#0A0A11] text-white font-sans flex flex-col overflow-x-hidden">
-      
-      {/* --- TOP NAVBAR --- */}
       <nav className="bg-[#12121D] border-b border-[#2A2A38] sticky top-0 z-50 shadow-xl">
         <div className="max-w-[1600px] mx-auto px-4 lg:px-8 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-4 lg:gap-8">
             <div className="flex items-center gap-3">
-              <button className="lg:hidden text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(true)}>
-                <Menu size={24} />
-              </button>
+              <button className="lg:hidden text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(true)}><Menu size={24} /></button>
               <Link to="/" className="flex items-center gap-2 shrink-0">
                 <div className="w-8 h-8 lg:w-10 lg:h-10 bg-[#6324E2] rounded-lg flex items-center justify-center font-bold text-lg lg:text-xl text-white shadow-[0_0_15px_rgba(99,36,226,0.4)]">X</div>
                 <span className="text-xl lg:text-2xl font-bold tracking-tight hidden sm:block">Xentra365</span>
               </Link>
             </div>
 
-            {/* Desktop Search Form */}
             <form onSubmit={handleSearch} className="hidden lg:flex flex-1 max-w-4xl relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <input 
@@ -117,9 +114,7 @@ const SearchResultsPage = () => {
                 placeholder="Search products..."
                 className="w-full bg-[#1E1E2C] border border-[#2A2A38] rounded-full py-2.5 pl-12 pr-24 focus:outline-none focus:border-[#6324E2] transition-colors text-sm"
               />
-              <button type="submit" className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-[#6324E2] px-6 py-1.5 rounded-full font-semibold hover:bg-[#501bb8] transition-colors text-sm">
-                SEARCH
-              </button>
+              <button type="submit" className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-[#6324E2] px-6 py-1.5 rounded-full font-semibold hover:bg-[#501bb8] transition-colors text-sm">SEARCH</button>
               <DropdownMenu />
             </form>
 
@@ -128,6 +123,15 @@ const SearchResultsPage = () => {
                 <div className="flex items-center gap-2 cursor-pointer text-gray-400 hover:text-[#6324E2] transition-colors py-2">
                   <User size={20} />
                   <span className="text-sm font-medium flex items-center gap-1">Account <ChevronDown size={14} className="transform group-hover:rotate-180 transition-transform"/></span>
+                </div>
+                <div className="absolute top-full right-0 w-48 bg-[#1E1E2C] border border-[#2A2A38] rounded-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col p-4 transform translate-y-2">
+                  <Link to="/profile" className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-[#2A2A38] rounded transition-colors flex items-center gap-2">
+                    <User size={16} /> My Profile
+                  </Link>
+                  <div className="h-px bg-[#2A2A38] my-1 w-full"></div>
+                  <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-colors flex items-center gap-2 font-medium">
+                    <LogOut size={16} /> Logout
+                  </button>
                 </div>
               </div>
 
@@ -138,15 +142,12 @@ const SearchResultsPage = () => {
 
               <Link to="/cart" className="flex items-center gap-2 relative text-gray-400 hover:text-[#6324E2] transition-colors py-2">
                 <ShoppingCart size={24} />
-                <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:block">Cart</span>
-                <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-red-500 text-[9px] sm:text-[10px] w-4 h-4 sm:w-5 h-5 flex items-center justify-center rounded-full font-bold text-white shadow-lg">
-                  {cartCount}
-                </span>
+                <span className="text-sm font-medium hidden sm:block">Cart</span>
+                <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-red-500 text-[9px] sm:text-[10px] w-4 h-4 sm:w-5 h-5 flex items-center justify-center rounded-full font-bold text-white shadow-lg">{cartCount}</span>
               </Link>
             </div>
           </div>
           
-          {/* Mobile Search Form */}
           <div className="flex lg:hidden mt-3 w-full relative z-50">
             <form onSubmit={handleSearch} className="relative w-full">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
@@ -208,10 +209,7 @@ const SearchResultsPage = () => {
             </h1>
             <div className="flex items-center justify-between">
               <p className="text-[10px] sm:text-sm text-gray-400">Found {filteredProducts.length} items</p>
-              
-              <button onClick={() => setIsFilterMenuOpen(true)} className="lg:hidden flex items-center gap-1.5 bg-[#1E1E2C] border border-[#2A2A38] px-3 py-1.5 rounded-full text-[10px] font-medium">
-                <Filter size={10} /> Filters
-              </button>
+              <button onClick={() => setIsFilterMenuOpen(true)} className="lg:hidden flex items-center gap-1.5 bg-[#1E1E2C] border border-[#2A2A38] px-3 py-1.5 rounded-full text-[10px] font-medium"><Filter size={10} /> Filters</button>
             </div>
           </div>
 
@@ -220,40 +218,55 @@ const SearchResultsPage = () => {
               <button className="text-[#A67CFF] border-b-2 border-[#A67CFF] pb-3 sm:pb-4 -mb-[13px] sm:-mb-[17px]">Popularity</button>
               <button className="text-gray-400 hover:text-white pb-3 sm:pb-4 -mb-[13px] sm:-mb-[17px] transition-colors">Price: Low to High</button>
             </div>
-            
             <div className="hidden sm:flex items-center gap-2 sm:gap-3">
               <button onClick={() => setViewMode('grid')} className={`${viewMode === 'grid' ? 'text-white' : 'text-gray-600 hover:text-gray-400'} transition-colors`}><Grid size={18} /></button>
               <button onClick={() => setViewMode('list')} className={`${viewMode === 'list' ? 'text-white' : 'text-gray-600 hover:text-gray-400'} transition-colors`}><List size={18} /></button>
             </div>
           </div>
 
-          {/* DENSE 3-COLUMN PRODUCT GRID */}
+          {/* UNIFIED EDGE-TO-EDGE CARD DESIGN GRID */}
           <div className={`grid gap-2 sm:gap-4 lg:gap-6 ${viewMode === 'grid' ? 'grid-cols-3 sm:grid-cols-4 xl:grid-cols-5' : 'grid-cols-1'}`}>
             {filteredProducts.length > 0 ? (
               filteredProducts.slice(0, 15).map((item) => (
-                <Link to={`/product/${item.id}`} key={item.id} className={`bg-[#12121D] border border-[#2A2A38] hover:border-[#6324E2] rounded-lg sm:rounded-xl overflow-hidden group transition-all ${viewMode === 'list' ? 'flex flex-row h-24 sm:h-40' : 'flex flex-col p-1.5 sm:p-3 lg:p-4'}`}>
+                <Link to={`/product/${item.id}`} key={item.id} className={`bg-[#12121D] border border-[#2A2A38] hover:border-[#6324E2] rounded-xl overflow-hidden group cursor-pointer transition-all shadow-lg ${viewMode === 'list' ? 'flex flex-row h-24 sm:h-40' : 'flex flex-col h-full'}`}>
                   
-                  <div className={`relative bg-[#1E1E2C] rounded-md sm:rounded-lg overflow-hidden ${viewMode === 'list' ? 'w-24 sm:w-48 shrink-0 rounded-none' : 'aspect-square sm:aspect-[4/3] w-full mb-1.5 sm:mb-3'}`}>
+                  <div className={`relative bg-[#1E1E2C] overflow-hidden ${viewMode === 'list' ? 'w-24 sm:w-48 shrink-0' : 'aspect-square w-full shrink-0'}`}>
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     
-                    <div className="absolute top-1 sm:top-2 lg:top-3 left-1 sm:left-2 lg:left-3 flex flex-col gap-1 z-10">
-                      <span className={`text-[6px] sm:text-[8px] lg:text-[10px] font-bold px-1 py-0.5 sm:px-1.5 sm:py-0.5 rounded shadow-lg flex items-center gap-0.5 sm:gap-1 w-max ${item.isVerified ? 'bg-emerald-600 text-white' : 'bg-[#6324E2] text-white'}`}>
-                         {item.isVerified ? '✓ VERIFED' : '★ ESCROW'}
-                      </span>
+                    <button onClick={(e) => e.preventDefault()} className="absolute top-2 right-2 w-6 h-6 sm:w-8 sm:h-8 bg-black/30 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-red-500 transition-colors z-10">
+                      <Heart size={12} className="sm:w-4 sm:h-4" />
+                    </button>
+
+                    <div className="absolute bottom-2 left-2 flex flex-wrap items-center gap-1 z-10">
+                      {item.isVerified && (
+                        <span className="bg-emerald-600 text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded shadow flex items-center gap-0.5">
+                          <ShieldCheck size={8} className="sm:w-3 sm:h-3" /> <span className="hidden sm:inline">Verified</span>
+                        </span>
+                      )}
+                      {item.isEscrow && (
+                        <span className="bg-[#6324E2] text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded shadow flex items-center gap-0.5">
+                          <ShieldCheck size={8} className="sm:w-3 sm:h-3" /> Escrow
+                        </span>
+                      )}
                     </div>
                   </div>
 
-                  <div className={`flex flex-col ${viewMode === 'list' ? 'flex-1 justify-center p-2 sm:p-4' : 'flex-1'}`}>
-                    <h3 className={`font-bold text-gray-200 group-hover:text-white transition-colors text-[9px] sm:text-sm lg:text-base mb-0.5 sm:mb-1 ${viewMode === 'list' ? 'line-clamp-2' : 'line-clamp-2 leading-tight h-6 sm:h-auto'}`}>{item.name}</h3>
-                    <div className="font-black text-[#A67CFF] text-[10px] sm:text-lg lg:text-xl mb-1">{item.price}</div>
+                  <div className={`flex flex-col flex-1 p-2 sm:p-3 lg:p-4`}>
+                    <h3 className={`font-bold text-gray-200 group-hover:text-white transition-colors text-[10px] sm:text-xs lg:text-sm mb-1.5 sm:mb-2 ${viewMode === 'list' ? 'line-clamp-2' : 'line-clamp-2 leading-tight'}`}>{item.name}</h3>
                     
-                    <p className={`text-[9px] sm:text-xs text-gray-400 mb-1 sm:mb-4 line-clamp-1 ${viewMode === 'grid' ? 'hidden sm:block' : 'block'}`}>{item.desc}</p>
-                    
-                    <div className={`mt-auto flex items-center justify-between pt-1 sm:pt-3 ${viewMode === 'grid' ? '' : 'border-t border-[#2A2A38]'}`}>
-                      <div className="flex items-center gap-0.5 sm:gap-1.5 text-[8px] sm:text-[10px] lg:text-xs">
-                        <Star size={8} className="text-yellow-500 sm:w-3 sm:h-3" fill="currentColor" />
-                        <span className="font-bold text-white">{item.rating}</span>
-                        <span className="text-gray-500 hidden sm:inline">({item.reviews})</span>
+                    <div className="mt-auto">
+                      <div className="font-bold text-[#A67CFF] text-xs sm:text-sm lg:text-lg mb-1 sm:mb-2">{item.price}</div>
+                      
+                      {viewMode === 'list' && (
+                        <p className="text-[9px] sm:text-xs text-gray-400 mb-1 sm:mb-4 line-clamp-1">{item.desc}</p>
+                      )}
+                      
+                      <div className={`flex items-center justify-between text-[8px] sm:text-[10px] lg:text-xs text-gray-500`}>
+                        <div className="flex items-center gap-0.5 sm:gap-1">
+                          <Star size={10} className="text-yellow-500 sm:w-3 sm:h-3" fill="currentColor" />
+                          <span className="font-bold text-gray-300">{item.rating}</span>
+                        </div>
+                        <span className="hidden sm:inline">{item.reviews} sold</span>
                       </div>
                     </div>
                   </div>
@@ -268,8 +281,19 @@ const SearchResultsPage = () => {
             )}
           </div>
 
+          {filteredProducts.length > 0 && (
+            <div className="flex justify-center items-center gap-1 sm:gap-2 mt-8 sm:mt-12 mb-6 sm:mb-8">
+              <button className="w-6 h-6 sm:w-10 sm:h-10 flex items-center justify-center bg-[#12121D] border border-[#2A2A38] text-gray-400 rounded sm:rounded-lg hover:text-white transition-colors">&lt;</button>
+              <button className="w-6 h-6 sm:w-10 sm:h-10 flex items-center justify-center bg-[#6324E2] text-white rounded sm:rounded-lg font-bold text-xs sm:text-base">1</button>
+              <button className="w-6 h-6 sm:w-10 sm:h-10 flex items-center justify-center bg-[#12121D] border border-[#2A2A38] text-gray-400 rounded sm:rounded-lg hover:text-white transition-colors text-xs sm:text-base">2</button>
+              <span className="text-gray-500 px-1 text-xs sm:text-base">...</span>
+              <button className="w-6 h-6 sm:w-10 sm:h-10 flex items-center justify-center bg-[#12121D] border border-[#2A2A38] text-gray-400 rounded sm:rounded-lg hover:text-white transition-colors">&gt;</button>
+            </div>
+          )}
+
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

@@ -8,6 +8,8 @@ import DashboardPage from "./pages/DashboardPage";
 import SearchResultsPage from './pages/SearchResultsPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import CartPage from './pages/CartPage';
+import ProfilePage from './pages/ProfilePage';
+import WalletPage from './pages/WalletPage';
 
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
@@ -31,6 +33,8 @@ function App() {
             <Route path="/dashboard/:category" element={<DashboardPage />} />
             <Route path="/search" element={<SearchResultsPage />} />
             <Route path="/product/:id" element={<ProductDetailsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/wallet" element={<WalletPage />} />
             
             {/* Cart & Checkout */}
             <Route path="/cart" element={<CartPage />} />

@@ -2,22 +2,27 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
   Search, Bell, ShoppingCart, User, ChevronDown, 
-  Zap, Grid, List, LogOut, Menu, X, ChevronRight
+  ShieldCheck, Zap, Grid, List, Clock, LogOut, Menu, X, ChevronRight, Star, Heart
 } from 'lucide-react';
-import { CATEGORIES, RECOMMENDED_PRODUCTS, ALL_PRODUCTS } from '../data/mockData';
+import { CATEGORIES, RECOMMENDED_PRODUCTS, RECENT_ORDERS, ALL_PRODUCTS, FLASH_SALE_PRODUCTS } from '../data/mockData';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import Footer from '../components/Footer';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
   const { cartCount } = useCart();
+  const { logout } = useAuth();
   
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const handleLogout = () => navigate('/');
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
   
   const liveResults = searchQuery.trim() === '' ? [] : ALL_PRODUCTS.filter(product => 
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -89,7 +94,6 @@ const DashboardPage = () => {
             </Link>
           </div>
 
-          {/* DESKTOP SEARCH */}
           <form onSubmit={handleSearch} className="flex-1 max-w-2xl hidden md:block relative">
             <input 
               type="text" 
@@ -120,7 +124,7 @@ const DashboardPage = () => {
             <Link to="/cart" className="flex flex-col items-center gap-1 relative text-gray-400 hover:text-white transition-colors">
               <ShoppingCart size={24} />
               <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:block">Cart</span>
-              <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-red-500 text-[9px] sm:text-[10px] w-4 h-4 sm:w-5 h-5 flex items-center justify-center rounded-full font-bold text-white shadow-lg">
+              <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-red-500 text-[9px] sm:text-[10px] w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center rounded-full font-bold text-white shadow-lg">
                 {cartCount}
               </span>
             </Link>
@@ -131,9 +135,9 @@ const DashboardPage = () => {
                 <span className="text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">Account <ChevronDown size={12} className="transform group-hover:rotate-180 transition-transform"/></span>
               </div>
               <div className="absolute top-full right-0 w-48 bg-[#1E1E2C] border border-[#2A2A38] rounded-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col p-2 transform translate-y-2">
-                <button className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-[#2A2A38] rounded transition-colors flex items-center gap-2">
+                <Link to="/profile" className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-[#2A2A38] rounded transition-colors flex items-center gap-2">
                   <User size={16} /> My Profile
-                </button>
+                </Link>
                 <div className="h-px bg-[#2A2A38] my-1 w-full"></div>
                 <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-colors flex items-center gap-2 font-medium">
                   <LogOut size={16} /> Logout
@@ -141,13 +145,12 @@ const DashboardPage = () => {
               </div>
             </div>
 
-            <button className="lg:hidden text-gray-400 hover:text-white transition-colors p-1">
+            <Link to="/profile" className="lg:hidden text-gray-400 hover:text-white transition-colors p-1">
               <User size={22} />
-            </button>
+            </Link>
           </div>
         </div>
 
-        {/* MOBILE SEARCH FORM */}
         <div className="px-4 pb-3 lg:hidden w-full relative block mt-2">
           <form onSubmit={handleSearch} className="relative w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
@@ -173,7 +176,6 @@ const DashboardPage = () => {
 
       <div className="flex-1 max-w-[1600px] w-full mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6 flex flex-col lg:flex-row gap-4 sm:gap-6 items-start" onMouseLeave={() => setActiveCategory(null)}>
         
-        {/* Sidebar */}
         <aside className={`fixed top-0 left-0 h-full w-64 bg-[#12121D] lg:bg-transparent z-50 lg:z-40 p-6 lg:p-0 lg:relative lg:block transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} shrink-0 flex flex-col gap-6 lg:sticky lg:top-32 border-r border-[#2A2A38] lg:border-none shadow-2xl lg:shadow-none`}>
           <div className="flex items-center justify-between lg:hidden mb-2">
             <span className="font-bold">Menu</span>
@@ -199,10 +201,54 @@ const DashboardPage = () => {
           </div>
         </aside>
 
-        <main className="flex-1 w-full flex flex-col gap-4 sm:gap-6 relative z-10">
+        <main className="flex-1 w-full flex flex-col gap-6 relative z-10">
           
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#12121D] border-b border-[#2A2A38] pb-4">
-            <div className="flex items-center gap-4 overflow-x-auto whitespace-nowrap no-scrollbar pb-2 sm:pb-0 text-sm">
+          <div className="flex-1 rounded-xl sm:rounded-2xl relative overflow-hidden flex items-center min-h-[200px] sm:min-h-[250px] lg:min-h-[300px] border border-[#2A2A38] shadow-xl">
+             <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1600" alt="Tech Background" className="absolute inset-0 w-full h-full object-cover object-center" />
+             <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A11] via-[#0A0A11]/90 to-transparent"></div>
+             
+             <div className="relative z-10 w-full p-6 lg:p-10">
+               <span className="bg-[#6324E2] text-white text-[10px] font-bold px-3 py-1 rounded uppercase tracking-wider mb-3 inline-block">Special Offer</span>
+               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-2 leading-tight">Global Trade Deals</h1>
+               <p className="text-gray-300 text-xs sm:text-sm mb-6 max-w-md">Up to 45% off on high-performance server clusters and networking hardware.</p>
+               <button className="bg-[#6324E2] hover:bg-[#501bb8] text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-lg transition-colors shadow-lg">Browse Sale</button>
+             </div>
+          </div>
+
+          <div className="bg-[#12121D] border border-[#2A2A38] rounded-xl sm:rounded-2xl p-4 sm:p-5 lg:p-6 flex flex-col">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <div className="flex items-center gap-2 sm:gap-4">
+                <h2 className="text-base sm:text-lg lg:text-xl font-bold text-white flex items-center gap-1 sm:gap-2"><Zap className="text-orange-500 w-4 h-4 sm:w-5 sm:h-5" fill="currentColor"/> Flash Sale</h2>
+                <div className="flex items-center gap-1 sm:gap-1.5 font-mono text-[10px] sm:text-sm">
+                  <span className="bg-[#1E1E2C] px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">04</span><span>:</span>
+                  <span className="bg-[#1E1E2C] px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">22</span><span>:</span>
+                  <span className="bg-[#1E1E2C] px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">59</span>
+                </div>
+              </div>
+              <button className="text-[10px] sm:text-sm font-medium text-[#6324E2] hover:text-white transition-colors">View All</button>
+            </div>
+            
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-4">
+              {FLASH_SALE_PRODUCTS.slice(0, 4).map((product, idx) => (
+                <Link to={`/product/${product.id}`} key={product.id} className={`${idx === 3 ? 'hidden sm:flex' : 'flex'} bg-[#1E1E2C] hover:bg-[#2A2A38] rounded-xl p-2 sm:p-3 flex-col transition-all cursor-pointer group overflow-hidden border border-transparent hover:border-[#6324E2]`}>
+                  <div className="relative aspect-square w-full rounded-lg mb-2 sm:mb-3 overflow-hidden bg-[#12121D]">
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90 group-hover:opacity-100" />
+                    <span className="absolute top-1 sm:top-2 left-1 sm:left-2 bg-orange-500 text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded z-10">{product.discount}</span>
+                  </div>
+                  <div className="mt-auto">
+                    <div className="font-bold text-[#A67CFF] text-[10px] sm:text-sm lg:text-base mb-1 sm:mb-2">{product.price}</div>
+                    <div className="w-full bg-[#12121D] h-1.5 sm:h-2 rounded-full overflow-hidden mb-1">
+                      <div className="bg-orange-500 h-full" style={{ width: `${product.soldProgress}%` }}></div>
+                    </div>
+                    <div className="text-[8px] sm:text-[10px] text-gray-400 font-medium">{product.soldProgress}% Sold</div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#12121D] border-b border-[#2A2A38] pb-4 mt-2">
+            <div className="flex items-center gap-4 overflow-x-auto whitespace-nowrap no-scrollbar text-sm">
               <span className="text-gray-500 font-medium shrink-0">SORT BY:</span>
               <button className="bg-[#6324E2] text-white px-4 py-1.5 rounded-full font-medium shrink-0">Recommended</button>
               <button className="text-gray-400 hover:text-white transition-colors shrink-0">Newest</button>
@@ -218,41 +264,62 @@ const DashboardPage = () => {
           <div>
             <h2 className="text-sm font-bold text-[#6324E2] uppercase tracking-wider mb-3 sm:mb-4">FEATURED PRODUCTS</h2>
             
-            {/* 3 COLUMNS ON MOBILE */}
             <div className="grid grid-cols-3 sm:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4">
-              {RECOMMENDED_PRODUCTS.slice(0, 10).map(product => (
-                <Link to={`/product/${product.id}`} key={product.id} className="bg-[#12121D] border border-[#2A2A38] hover:border-[#6324E2] rounded-lg sm:rounded-xl p-1.5 sm:p-3 flex flex-col group cursor-pointer transition-colors relative">
-                  
-                  <div className="aspect-square bg-[#1E1E2C] rounded-md sm:rounded-lg mb-1.5 sm:mb-3 relative overflow-hidden">
-                    <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    <span className={`absolute top-1 sm:top-2 left-1 sm:left-2 text-[6px] sm:text-[8px] font-bold px-1 py-0.5 sm:px-1.5 sm:py-0.5 rounded z-10 ${
-                      product.tag === 'Verified' ? 'bg-emerald-600 text-white' : 'bg-[#6324E2] text-white'
-                    }`}>
-                      {product.tag === 'Verified' ? '✓ VERIF' : '★ ESCROW'}
-                    </span>
+              {RECOMMENDED_PRODUCTS.slice(0, 15).map(product => (
+                <Link to={`/product/${product.id}`} key={product.id} className="bg-[#12121D] border border-[#2A2A38] hover:border-[#6324E2] rounded-xl flex flex-col group cursor-pointer transition-all overflow-hidden shadow-lg h-full">
+                  <div className="relative aspect-square w-full bg-[#1E1E2C] overflow-hidden shrink-0">
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    
+                    <button onClick={(e) => e.preventDefault()} className="absolute top-2 right-2 w-6 h-6 sm:w-8 sm:h-8 bg-black/30 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-red-500 transition-colors z-10">
+                      <Heart size={12} className="sm:w-4 sm:h-4" />
+                    </button>
+
+                    <div className="absolute bottom-2 left-2 flex flex-wrap items-center gap-1 z-10">
+                      {product.tag === 'Verified' && (
+                        <span className="bg-emerald-600 text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded shadow flex items-center gap-0.5">
+                          <ShieldCheck size={8} className="sm:w-3 sm:h-3" /> <span className="hidden sm:inline">Verified</span>
+                        </span>
+                      )}
+                      {product.isEscrow && (
+                        <span className="bg-[#6324E2] text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded shadow flex items-center gap-0.5">
+                          <ShieldCheck size={8} className="sm:w-3 sm:h-3" /> Escrow
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  <h3 className="text-[9px] sm:text-xs text-gray-300 font-medium line-clamp-2 leading-tight mb-1 sm:mb-2 h-6 sm:h-8 group-hover:text-white transition-colors">
-                    {product.name}
-                  </h3>
-
-                  <div className="mt-auto flex flex-col sm:flex-row sm:items-end justify-between gap-1">
-                    <div className="font-bold text-[#A67CFF] text-[10px] sm:text-sm">{product.price}</div>
-                    <button className="hidden sm:flex w-6 h-6 bg-[#2A1854] text-[#A67CFF] rounded-md items-center justify-center hover:bg-[#6324E2] hover:text-white transition-colors">
-                      <ShoppingCart size={10} />
-                    </button>
+                  <div className="p-2 sm:p-3 lg:p-4 flex flex-col flex-1">
+                    <h3 className="text-[10px] sm:text-xs lg:text-sm font-medium text-gray-200 line-clamp-2 leading-tight mb-1.5 sm:mb-2 group-hover:text-white transition-colors">{product.name}</h3>
+                    <div className="mt-auto">
+                      <div className="font-bold text-[#A67CFF] text-xs sm:text-sm lg:text-lg mb-1 sm:mb-2">{product.price}</div>
+                      <div className="flex items-center justify-between text-[8px] sm:text-[10px] lg:text-xs text-gray-500">
+                        <div className="flex items-center gap-0.5 sm:gap-1">
+                          <Star size={10} className="text-yellow-500 sm:w-3 sm:h-3" fill="currentColor" />
+                          <span className="font-bold text-gray-300">{product.rating}</span>
+                        </div>
+                        <span className="hidden sm:inline">{product.reviews} sold</span>
+                      </div>
+                    </div>
                   </div>
                 </Link>
               ))}
+            </div>
+            
+            <div className="flex justify-center items-center gap-2 mt-6 sm:mt-10">
+              <button className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-[#1E1E2C] text-gray-400 rounded hover:text-white">&lt;</button>
+              <button className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-[#6324E2] text-white rounded font-bold text-xs sm:text-sm">1</button>
+              <button className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-[#1E1E2C] text-gray-400 rounded hover:text-white text-xs sm:text-sm">2</button>
+              <span className="text-gray-500 text-xs sm:text-sm">...</span>
+              <button className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-[#1E1E2C] text-gray-400 rounded hover:text-white text-xs sm:text-sm">&gt;</button>
             </div>
           </div>
         </main>
 
         <aside className="w-full lg:w-[300px] shrink-0 flex flex-col md:flex-row lg:flex-col gap-6 mt-6 lg:mt-0 relative z-10">
-          <div className="bg-[#12121D] border border-[#2A2A38] rounded-xl p-5 flex-1">
+          <div className="bg-[#12121D] border border-[#2A2A38] rounded-xl sm:rounded-2xl p-6 flex-1">
             <div className="flex justify-between items-center mb-6">
                <h3 className="text-xs font-bold text-[#6324E2] uppercase tracking-wider">BUYER WALLET</h3>
-               <div className="w-6 h-6 bg-[#2A2A38] rounded flex items-center justify-center text-gray-400"><Zap size={12} /></div>
+               <div className="w-8 h-8 bg-[#1E1E2C] rounded-lg flex items-center justify-center text-[#A67CFF]"><Zap size={16} /></div>
             </div>
             
             <div className="mb-4">
@@ -260,18 +327,45 @@ const DashboardPage = () => {
               <div className="text-2xl lg:text-3xl font-black text-white">$14,520.40</div>
             </div>
             
-            <div className="mb-6">
+            <div className="mb-8">
               <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">PENDING ESCROW</div>
               <div className="text-base lg:text-lg font-bold text-[#6324E2]">$2,100.00</div>
             </div>
 
-            <div className="flex gap-3">
-              <button className="flex-1 bg-[#6324E2] hover:bg-[#501bb8] text-white text-sm font-bold py-2.5 rounded-lg transition-colors">Deposit</button>
-              <button className="flex-1 bg-[#2A2A38] hover:bg-gray-700 text-white text-sm font-bold py-2.5 rounded-lg transition-colors">Withdraw</button>
+            <div className="flex flex-col gap-3">
+              <Link to="/profile" className="w-full bg-[#6324E2] hover:bg-[#501bb8] text-white text-center text-sm font-bold py-3 rounded-lg transition-colors">Fund Wallet</Link>
+              <button className="w-full bg-[#1E1E2C] hover:bg-[#2A2A38] text-white text-sm font-bold py-3 rounded-lg transition-colors border border-[#2A2A38]">Withdraw</button>
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col gap-6">
+            <div className="bg-[#12121D] border border-[#2A2A38] rounded-xl sm:rounded-2xl p-6 flex-1">
+              <div className="flex justify-between items-center mb-6">
+                 <h3 className="text-xs font-bold text-[#6324E2] uppercase tracking-wider">RECENT ORDERS</h3>
+                 <Link to="/profile" className="text-[10px] font-bold text-gray-400 hover:text-white">View All</Link>
+              </div>
+
+              <div className="flex flex-col gap-5">
+                {RECENT_ORDERS.map((order, i) => (
+                  <div key={i} className={i !== 0 ? "pt-5 border-t border-[#2A2A38]" : ""}>
+                    <div className="flex justify-between items-start mb-1">
+                      <span className="text-[10px] font-medium text-gray-400">{order.id}</span>
+                      <span className={`text-[10px] font-bold ${order.statusColor}`}>{order.status}</span>
+                    </div>
+                    <h4 className="text-xs lg:text-sm font-medium text-white mb-2 line-clamp-1">{order.name}</h4>
+                    <div className="flex justify-between items-end">
+                      <span className="text-[10px] text-gray-500 flex items-center gap-1"><Clock size={10}/> {order.eta}</span>
+                      <span className="text-sm font-bold text-[#A67CFF]">{order.price}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </aside>
       </div>
+
+      <Footer />
     </div>
   );
 };

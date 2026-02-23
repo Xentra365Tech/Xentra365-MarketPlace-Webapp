@@ -2,19 +2,27 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Search, ShoppingCart, User, ChevronRight, ChevronDown, 
-  Menu, X, ShieldCheck, Zap, Star
+  Menu, X, ShieldCheck, Zap, Star, Heart, LogOut
 } from 'lucide-react';
 import { CATEGORIES, FLASH_SALE_PRODUCTS, RECOMMENDED_PRODUCTS, ALL_PRODUCTS } from '../data/mockData';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import Footer from '../components/Footer';
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const { cartCount } = useCart();
+  const { logout } = useAuth();
   
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   const liveResults = searchQuery.trim() === '' ? [] : ALL_PRODUCTS.filter(product => 
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -70,7 +78,7 @@ const LandingPage = () => {
   );
 
   return (
-    <div className="min-h-screen w-screen bg-[#0A0A11] text-white font-sans pb-20 overflow-x-hidden">
+    <div className="min-h-screen w-screen bg-[#0A0A11] text-white font-sans flex flex-col overflow-x-hidden">
       
       {/* --- TOP NAVBAR --- */}
       <nav className="bg-[#12121D] border-b border-[#2A2A38] sticky top-0 z-50 shadow-xl">
@@ -113,7 +121,7 @@ const LandingPage = () => {
               <Link to="/cart" className="flex flex-col items-center gap-1 relative text-gray-400 hover:text-white transition-colors">
                 <ShoppingCart size={24} />
                 <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:block">Cart</span>
-                <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-red-500 text-[9px] sm:text-[10px] w-4 h-4 sm:w-5 h-5 flex items-center justify-center rounded-full font-bold text-white shadow-lg">
+                <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-red-500 text-[9px] sm:text-[10px] w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center rounded-full font-bold text-white shadow-lg">
                   {cartCount}
                 </span>
               </Link>
@@ -121,13 +129,16 @@ const LandingPage = () => {
               <div className="relative group hidden lg:block">
                 <div className="flex flex-col items-center gap-1 cursor-pointer text-gray-400 hover:text-white transition-colors py-2">
                   <User size={20} />
-                  <span className="text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">Login <ChevronDown size={12} className="transform group-hover:rotate-180 transition-transform"/></span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">Account <ChevronDown size={12} className="transform group-hover:rotate-180 transition-transform"/></span>
                 </div>
-                <div className="absolute top-full right-0 w-64 bg-[#1E1E2C] border border-[#2A2A38] rounded-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col p-4 transform translate-y-2">
-                  <Link to="/login" className="w-full bg-[#6324E2] hover:bg-[#501bb8] text-white text-sm font-bold py-3 rounded text-center transition-colors shadow-lg active:scale-[0.98]">LOGIN</Link>
-                  <div className="mt-4 text-center border-b border-[#2A2A38] pb-4">
-                    <Link to="/register" className="text-xs font-medium text-gray-400 hover:text-white transition-colors">New customer? <span className="text-[#6324E2] hover:underline ml-1 font-bold">Create Account</span></Link>
-                  </div>
+                <div className="absolute top-full right-0 w-48 bg-[#1E1E2C] border border-[#2A2A38] rounded-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col p-4 transform translate-y-2">
+                  <Link to="/profile" className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-[#2A2A38] rounded transition-colors flex items-center gap-2">
+                    <User size={16} /> My Profile
+                  </Link>
+                  <div className="h-px bg-[#2A2A38] my-1 w-full"></div>
+                  <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-colors flex items-center gap-2 font-medium">
+                    <LogOut size={16} /> Logout
+                  </button>
                 </div>
               </div>
 
@@ -154,6 +165,19 @@ const LandingPage = () => {
               <DropdownMenu />
             </form>
           </div>
+        </div>
+
+        <div className="hidden lg:flex items-center justify-between px-8 py-3 bg-[#0A0A11] border-b border-[#2A2A38] text-sm">
+           <div className="flex gap-8 font-medium text-gray-400">
+             <Link to="/" className="text-white border-b-2 border-[#6324E2] pb-1">Home</Link>
+             <a href="#" className="hover:text-white transition-colors">Electronics</a>
+             <a href="#" className="hover:text-white transition-colors">Fashion</a>
+             <a href="#" className="hover:text-white transition-colors">Home & Living</a>
+             <a href="#" className="hover:text-white transition-colors">Health & Beauty</a>
+           </div>
+           <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
+             <ShieldCheck size={16} /> Trust Center
+           </div>
         </div>
       </nav>
 
@@ -202,24 +226,36 @@ const LandingPage = () => {
             </div>
           )}
 
-          <div className="flex-1 bg-gradient-to-r from-[#170E3A] to-[#0A0A11] border border-[#2A2A38] rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-16 relative overflow-hidden flex items-center min-h-[220px] sm:min-h-[300px] lg:min-h-[450px]">
-            <div className="relative z-10 max-w-xl">
-              <span className="bg-[#6324E2] text-white text-[8px] sm:text-[10px] font-bold px-2 py-1 sm:px-3 sm:py-1 rounded uppercase tracking-wider mb-2 sm:mb-4 inline-block shadow-[0_0_10px_rgba(99,36,226,0.5)]">Exclusive Launch</span>
-              <h1 className="text-xl sm:text-3xl lg:text-6xl font-black text-white mb-2 sm:mb-4 lg:mb-6 leading-tight">Secure Your<br/>Next Tech Upgrade.</h1>
-              <p className="text-gray-400 text-[10px] sm:text-xs lg:text-base mb-4 sm:mb-8 leading-relaxed max-w-xs sm:max-w-md">100% Escrow protected transactions. Verified sellers only.</p>
-              <button className="bg-[#6324E2] hover:bg-[#501bb8] text-white text-xs sm:text-sm font-bold px-5 py-2.5 sm:px-8 sm:py-3.5 rounded-lg transition-colors shadow-lg active:scale-95">
+          {/* EXACT DESIGN REPLICATION: IMAGE HERO BANNER */}
+          <div className="flex-1 rounded-xl sm:rounded-2xl relative overflow-hidden flex items-center min-h-[250px] sm:min-h-[350px] lg:min-h-[450px] border border-[#2A2A38]">
+            <img 
+              src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1600" 
+              alt="Tech Background" 
+              className="absolute inset-0 w-full h-full object-cover object-right"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A11] via-[#0A0A11]/90 to-transparent"></div>
+            
+            <div className="relative z-10 max-w-xl p-6 sm:p-8 lg:p-16">
+              <span className="bg-[#6324E2] text-white text-[8px] sm:text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3 sm:mb-4 inline-block shadow-lg">Exclusive Launch</span>
+              <h1 className="text-2xl sm:text-4xl lg:text-6xl font-black text-white mb-3 sm:mb-4 lg:mb-6 leading-tight">Secure Your<br/>Next Tech Upgrade.</h1>
+              <p className="text-gray-300 text-[10px] sm:text-sm lg:text-base mb-6 sm:mb-8 leading-relaxed max-w-xs sm:max-w-md">100% Escrow protected transactions. Verified sellers only. Shop with zero risk on Xentra365.</p>
+              <button className="bg-[#6324E2] hover:bg-[#501bb8] text-white text-xs sm:text-sm font-bold px-6 py-3 sm:px-8 sm:py-3.5 rounded-lg transition-colors shadow-lg active:scale-95">
                 Shop Collection
               </button>
             </div>
-            <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-30 lg:opacity-100 pointer-events-none flex justify-end">
-               <div className="w-64 h-64 sm:w-96 sm:h-96 border-[20px] sm:border-[40px] border-[#6324E2]/20 rounded-full absolute -right-10 sm:-right-20 top-1/2 transform -translate-y-1/2 blur-xl"></div>
+
+            {/* Carousel Dots per design */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+              <div className="w-2 h-2 rounded-full bg-white"></div>
+              <div className="w-2 h-2 rounded-full bg-white/30 hover:bg-white/60 cursor-pointer transition-colors"></div>
+              <div className="w-2 h-2 rounded-full bg-white/30 hover:bg-white/60 cursor-pointer transition-colors"></div>
             </div>
           </div>
         </div>
 
         {/* --- FLASH SALE ROW --- */}
         <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
-          <div className="flex-1 bg-[#12121D] border border-[#2A2A38] rounded-xl sm:rounded-2xl p-3 sm:p-5 lg:p-6 flex flex-col">
+          <div className="flex-1 bg-[#12121D] border border-[#2A2A38] rounded-xl sm:rounded-2xl p-4 sm:p-5 lg:p-6 flex flex-col">
             <div className="flex items-center justify-between mb-4 sm:mb-6">
               <div className="flex items-center gap-2 sm:gap-4">
                 <h2 className="text-base sm:text-lg lg:text-xl font-bold text-white flex items-center gap-1 sm:gap-2"><Zap className="text-orange-500 w-4 h-4 sm:w-5 sm:h-5" fill="currentColor"/> Flash Sale</h2>
@@ -232,37 +268,48 @@ const LandingPage = () => {
               <button className="text-[10px] sm:text-sm font-medium text-[#6324E2] hover:text-white transition-colors">View All</button>
             </div>
             
-            {/* 3 COLUMNS ON MOBILE, 4 ON TABLET */}
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-4">
-              {FLASH_SALE_PRODUCTS.slice(0, 3).map((product) => (
-                <Link to={`/product/${product.id}`} key={product.id} className="bg-[#0A0A11] border border-[#2A2A38] hover:border-[#6324E2] rounded-lg sm:rounded-xl p-1.5 sm:p-3 flex flex-col transition-all cursor-pointer group">
-                  <div className="relative aspect-square bg-[#1E1E2C] rounded-md sm:rounded-lg mb-2 sm:mb-3 overflow-hidden">
-                    <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    <span className="absolute top-1 sm:top-2 left-1 sm:left-2 bg-orange-500 text-white text-[7px] sm:text-[10px] font-bold px-1 py-0.5 sm:px-2 sm:py-0.5 rounded sm:rounded-full z-10">{product.discount}</span>
+              {FLASH_SALE_PRODUCTS.slice(0, 4).map((product, idx) => (
+                <Link to={`/product/${product.id}`} key={product.id} className={`${idx === 3 ? 'hidden sm:flex' : 'flex'} bg-[#1E1E2C] hover:bg-[#2A2A38] rounded-xl p-2 sm:p-3 flex-col transition-all cursor-pointer group overflow-hidden border border-transparent hover:border-[#6324E2]`}>
+                  <div className="relative aspect-square w-full rounded-lg mb-2 sm:mb-3 overflow-hidden bg-[#12121D]">
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90 group-hover:opacity-100" />
+                    <span className="absolute top-1 sm:top-2 left-1 sm:left-2 bg-orange-500 text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded shadow-lg z-10">{product.discount}</span>
                   </div>
                   <div className="mt-auto">
-                    <div className="font-bold text-[#6324E2] text-[10px] sm:text-sm lg:text-base mb-0.5 sm:mb-1">{product.price}</div>
-                    <div className="w-full bg-[#1E1E2C] h-1 sm:h-1.5 rounded-full overflow-hidden mb-0.5 sm:mb-1">
+                    <div className="font-bold text-[#A67CFF] text-[10px] sm:text-sm lg:text-base mb-1 sm:mb-2">{product.price}</div>
+                    <div className="w-full bg-[#12121D] h-1.5 sm:h-2 rounded-full overflow-hidden mb-1">
                       <div className="bg-orange-500 h-full" style={{ width: `${product.soldProgress}%` }}></div>
                     </div>
-                    <div className="text-[7px] sm:text-[9px] text-gray-500">{product.soldProgress}% Sold</div>
+                    <div className="text-[8px] sm:text-[10px] text-gray-400 font-medium">{product.soldProgress}% Sold</div>
                   </div>
                 </Link>
               ))}
-              {/* Show the 4th item only on screens sm and up */}
-              <Link to={`/product/${FLASH_SALE_PRODUCTS[3].id}`} key={FLASH_SALE_PRODUCTS[3].id} className="hidden sm:flex bg-[#0A0A11] border border-[#2A2A38] hover:border-[#6324E2] rounded-xl p-3 flex-col transition-all cursor-pointer group">
-                  <div className="relative aspect-square bg-[#1E1E2C] rounded-lg mb-3 overflow-hidden">
-                    <img src={FLASH_SALE_PRODUCTS[3].image} alt={FLASH_SALE_PRODUCTS[3].name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    <span className="absolute top-2 left-2 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10">{FLASH_SALE_PRODUCTS[3].discount}</span>
-                  </div>
-                  <div className="mt-auto">
-                    <div className="font-bold text-[#6324E2] text-sm lg:text-base mb-1">{FLASH_SALE_PRODUCTS[3].price}</div>
-                    <div className="w-full bg-[#1E1E2C] h-1.5 rounded-full overflow-hidden mb-1">
-                      <div className="bg-orange-500 h-full" style={{ width: `${FLASH_SALE_PRODUCTS[3].soldProgress}%` }}></div>
-                    </div>
-                    <div className="text-[9px] text-gray-500">{FLASH_SALE_PRODUCTS[3].soldProgress}% Sold</div>
-                  </div>
-              </Link>
+            </div>
+          </div>
+
+          <div className="w-full lg:w-[380px] bg-gradient-to-b from-[#4812B5] to-[#2A1854] rounded-2xl p-6 lg:p-8 flex flex-col shrink-0 shadow-xl border border-[#6324E2]/30">
+            <h2 className="text-xl font-bold text-white mb-8 flex items-center gap-2">
+              <ShieldCheck className="text-blue-400" size={24}/> Why Xentra365?
+            </h2>
+            <div className="space-y-6 flex-1">
+              <div className="flex gap-4">
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0"><ShieldCheck size={16} className="text-white"/></div>
+                <div>
+                  <h4 className="font-bold text-sm text-white mb-1">Xentra Escrow</h4>
+                  <p className="text-[11px] text-purple-200 leading-relaxed">Funds are held securely until you confirm receipt and satisfaction.</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0"><User size={16} className="text-white"/></div>
+                <div>
+                  <h4 className="font-bold text-sm text-white mb-1">Verified Merchants</h4>
+                  <p className="text-[11px] text-purple-200 leading-relaxed">Every seller undergoes a rigorous identity and quality audit.</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-8 bg-white/5 rounded-xl p-4 border border-white/10">
+              <div className="text-[10px] font-bold text-purple-200 uppercase tracking-wider mb-1">TOTAL SECURED VOLUME</div>
+              <div className="text-2xl font-black text-white">$12,450,293</div>
             </div>
           </div>
         </div>
@@ -273,28 +320,44 @@ const LandingPage = () => {
             <h2 className="text-base sm:text-xl lg:text-2xl font-bold text-white flex items-center gap-1 sm:gap-2"><Star className="text-blue-500 w-4 h-4 sm:w-5 sm:h-5" fill="currentColor"/> Recommended</h2>
           </div>
           
-          {/* 3 COLUMNS ON MOBILE, 4 ON TABLET, 6 ON DESKTOP */}
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4 lg:gap-5">
             {RECOMMENDED_PRODUCTS.map((product) => (
-              <Link to={`/product/${product.id}`} key={product.id} className="bg-[#12121D] border border-[#2A2A38] hover:border-[#6324E2] rounded-lg sm:rounded-xl p-1.5 sm:p-3 lg:p-4 group cursor-pointer transition-all flex flex-col h-full">
+              <Link to={`/product/${product.id}`} key={product.id} className="bg-[#12121D] border border-[#2A2A38] hover:border-[#6324E2] rounded-xl flex flex-col group cursor-pointer transition-all overflow-hidden shadow-lg h-full">
                 
-                <div className="aspect-square bg-[#1E1E2C] rounded-md sm:rounded-lg mb-1.5 sm:mb-3 relative overflow-hidden">
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                {/* EDGE TO EDGE IMAGE DESIGN */}
+                <div className="relative aspect-square w-full bg-[#1E1E2C] overflow-hidden shrink-0">
+                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   
-                  {/* Badges - Ultra compact on mobile */}
-                  <div className="absolute top-1 sm:top-2 left-1 sm:left-2 flex flex-col gap-1 z-10">
-                    <span className={`text-[6px] sm:text-[8px] lg:text-[9px] font-bold px-1 py-0.5 sm:px-1.5 sm:py-0.5 rounded shadow-lg ${product.tag === 'Verified' ? 'bg-emerald-600 text-white' : 'bg-[#6324E2] text-white'}`}>
-                      {product.tag === 'Verified' ? '✓ VERIF' : '★ ESCROW'}
-                    </span>
+                  <button onClick={(e) => e.preventDefault()} className="absolute top-2 right-2 w-6 h-6 sm:w-8 sm:h-8 bg-black/30 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-red-500 transition-colors z-10">
+                    <Heart size={12} className="sm:w-4 sm:h-4" />
+                  </button>
+
+                  <div className="absolute bottom-2 left-2 flex flex-wrap items-center gap-1 z-10">
+                    {product.tag === 'Verified' && (
+                      <span className="bg-emerald-600 text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded shadow flex items-center gap-0.5">
+                        <ShieldCheck size={8} className="sm:w-3 sm:h-3" /> <span className="hidden sm:inline">Verified</span>
+                      </span>
+                    )}
+                    {product.isEscrow && (
+                      <span className="bg-[#6324E2] text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded shadow flex items-center gap-0.5">
+                        <ShieldCheck size={8} className="sm:w-3 sm:h-3" /> Escrow
+                      </span>
+                    )}
                   </div>
                 </div>
 
-                <h3 className="text-[9px] sm:text-xs font-medium text-gray-300 line-clamp-2 leading-tight mb-1 sm:mb-3 h-6 sm:h-8 group-hover:text-white transition-colors">{product.name}</h3>
-                
-                <div className="mt-auto flex flex-col sm:flex-row sm:items-end justify-between">
-                  <div className="font-bold text-[#A67CFF] text-[10px] sm:text-sm lg:text-base leading-tight mb-0.5 sm:mb-0">{product.price}</div>
-                  <div className="flex items-center gap-0.5 sm:gap-1 text-[8px] sm:text-[10px] text-gray-500">
-                    <Star size={8} className="text-yellow-500 sm:w-2.5 sm:h-2.5" fill="currentColor"/> {product.rating}
+                {/* DETAILS COMPARTMENT */}
+                <div className="p-2 sm:p-3 lg:p-4 flex flex-col flex-1">
+                  <h3 className="text-[10px] sm:text-xs lg:text-sm font-medium text-gray-200 line-clamp-2 leading-tight mb-1.5 sm:mb-2 group-hover:text-white transition-colors">{product.name}</h3>
+                  <div className="mt-auto">
+                    <div className="font-bold text-[#A67CFF] text-xs sm:text-sm lg:text-lg mb-1 sm:mb-2">{product.price}</div>
+                    <div className="flex items-center justify-between text-[8px] sm:text-[10px] lg:text-xs text-gray-500">
+                      <div className="flex items-center gap-0.5 sm:gap-1">
+                        <Star size={10} className="text-yellow-500 sm:w-3 sm:h-3" fill="currentColor" />
+                        <span className="font-bold text-gray-300">{product.rating}</span>
+                      </div>
+                      <span>{product.reviews} sold</span>
+                    </div>
                   </div>
                 </div>
               </Link>
@@ -303,6 +366,7 @@ const LandingPage = () => {
         </div>
 
       </main>
+      <Footer />
     </div>
   );
 };

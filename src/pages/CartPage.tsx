@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ShoppingCart, ShieldCheck, ArrowLeft, Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import Footer from '../components/Footer';
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -129,6 +130,7 @@ const CartPage = () => {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   );
 };
