@@ -10,6 +10,7 @@ import ProductDetailsPage from './pages/ProductDetailsPage';
 import CartPage from './pages/CartPage';
 import ProfilePage from './pages/ProfilePage';
 import WalletPage from './pages/WalletPage';
+import SecurityPage from './pages/SecurityPage';
 
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
@@ -35,6 +36,7 @@ function App() {
             <Route path="/product/:id" element={<ProductDetailsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/wallet" element={<WalletPage />} />
+            <Route path="/security" element={<SecurityPage />} />
             
             {/* Cart & Checkout */}
             <Route path="/cart" element={<CartPage />} />
