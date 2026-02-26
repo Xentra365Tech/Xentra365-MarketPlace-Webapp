@@ -37,7 +37,7 @@ const WalletPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0A0A11] text-white font-sans flex overflow-hidden">
+    <div className="min-h-screen w-screen bg-[#0A0A11] text-white font-sans flex overflow-hidden">
       
       {/* --- MOBILE OVERLAY --- */}
       {isMobileSidebarOpen && (

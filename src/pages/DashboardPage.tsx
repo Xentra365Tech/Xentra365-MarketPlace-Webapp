@@ -38,7 +38,7 @@ const DashboardPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A11] text-white font-sans flex flex-col overflow-x-hidden">
+    <div className="min-h-screen w-screen bg-[#0A0A11] text-white font-sans flex flex-col overflow-x-hidden">
       
       {/* --- TOP NAVBAR --- */}
       <nav className="bg-[#12121D] border-b border-[#2A2A38] sticky top-0 z-40 flex flex-col shadow-xl">
