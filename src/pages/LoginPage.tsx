@@ -127,7 +127,7 @@ const LoginPage = () => {
               key={i} 
               type="button" 
               disabled={isLoading}
-              className="w-10 h-10 rounded-full bg-[#1E1E2C] border border-gray-700 flex items-center justify-center hover:border-gray-500 hover:bg-[#2A2A38] transition-all overflow-hidden disabled:opacity-50"
+              className="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center hover:border-gray-500 hover:bg-[#2A2A38] transition-all overflow-hidden disabled:opacity-50"
               aria-label={`Log in with ${provider.name}`}
             >
               <img 

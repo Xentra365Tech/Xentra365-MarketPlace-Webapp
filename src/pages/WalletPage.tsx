@@ -47,9 +47,9 @@ const WalletPage = () => {
         />
       )}
 
-      {/* --- PURPLE SIDEBAR --- */}
+      {/* --- SIDEBAR --- */}
       <aside 
-        className={`fixed lg:relative top-0 left-0 h-screen bg-[#3A0CA3] text-white transition-all duration-300 z-50 flex flex-col shadow-2xl shrink-0
+        className={`fixed lg:relative top-0 left-0 h-screen bg-slate-950 text-white transition-all duration-300 z-50 flex flex-col shadow-2xl shrink-0
         ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} 
         ${isSidebarCollapsed ? 'lg:w-20' : 'w-64'}`}
       >
