@@ -104,7 +104,7 @@ const LandingPage = () => {
              <Link to="/" className="text-[#A67CFF] border-b-2 border-[#A67CFF] pb-1">Home</Link>
              <Link to="#" className="hover:text-white transition-colors">Priority Sellers</Link>
              <Link to="#" className="hover:text-white transition-colors">Local Marketplace</Link>
-             <Link to="#" className="hover:text-white transition-colors flex items-center gap-1">Promotions <span className="bg-orange-500 text-white text-[8px] px-1.5 py-0.5 rounded-full">HOT</span></Link>
+             <Link to="#" className="hover:text-white transition-colors flex items-center gap-1">Promotions <span className="bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded-full"></span></Link>
              <Link to="#" className="hover:text-white transition-colors">Bulk Wholesale</Link>
              <Link to="#" className="hover:text-white transition-colors">New Arrivals</Link>
            </div>
