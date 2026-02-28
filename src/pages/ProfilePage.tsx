@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Wallet, ShieldCheck, Settings, Bell, 
   Search, LogOut, Menu, X, ChevronLeft, ChevronRight,
   ShieldAlert, Star, Plus, HelpCircle, Lock, Edit3,
-  ShoppingCart, RotateCcw, FileText, ArrowDownLeft
+  ShoppingCart, RotateCcw, FileText, ArrowDownLeft, Store
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -21,8 +21,10 @@ const ProfilePage = () => {
     navigate('/');
   };
 
+  // ADDED: "Marketplace Home" as the top link to escape back to the dashboard!
   const navItems = [
-    { name: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/profile' },
+    { name: 'Marketplace Home', icon: <Store size={20} />, path: '/dashboard' },
+    { name: 'Profile Overview', icon: <LayoutDashboard size={20} />, path: '/profile' },
     { name: 'Escrow Wallet', icon: <Wallet size={20} />, path: '/wallet' },
     { name: 'Security & Privacy', icon: <ShieldCheck size={20} />, path: '/security' },
     { name: 'Profile Settings', icon: <Settings size={20} />, path: '/settings' },
@@ -47,7 +49,7 @@ const ProfilePage = () => {
         />
       )}
 
-      {/*Sidebar*/}
+      {/* --- SIDEBAR --- */}
       <aside 
         className={`fixed lg:relative top-0 left-0 h-full bg-slate-950 text-white transition-all duration-300 z-50 flex flex-col shadow-2xl shrink-0
         ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} 
@@ -71,7 +73,8 @@ const ProfilePage = () => {
                 key={item.name} 
                 to={item.path}
                 className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group
-                  ${isActive ? 'bg-white/10 font-bold text-white shadow-inner' : 'text-purple-200 hover:bg-white/5 hover:text-white'}`}
+                  ${isActive ? 'bg-white/10 font-bold text-white shadow-inner' : 'text-purple-200 hover:bg-white/5 hover:text-white'}
+                  ${item.name === 'Marketplace Home' ? 'mb-4 border border-white/10 bg-white/5' : ''}`}
                 title={isSidebarCollapsed ? item.name : ''}
               >
                 <div className={`${isActive ? 'text-white' : 'text-purple-300 group-hover:text-white'}`}>
@@ -134,10 +137,12 @@ const ProfilePage = () => {
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
               <span className="text-[10px] font-bold text-emerald-400 tracking-wider uppercase">System Online</span>
             </div>
-            <button className="text-gray-400 hover:text-white relative">
+            
+            <Link to="/notifications" className="text-gray-400 hover:text-white relative block cursor-pointer">
                <Bell size={20} />
                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
+            </Link>
+            
             <div className="w-8 h-8 rounded-full overflow-hidden shrink-0">
               <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" alt="Avatar" className="w-full h-full object-cover"/>
             </div>
@@ -187,9 +192,10 @@ const ProfilePage = () => {
                     Top-rated trader with 128 successful escrowed transactions this year. 0 disputes raised.
                   </p>
 
-                  <button className="w-full bg-[#1E1E2C] hover:bg-[#2A2A38] border border-[#2A2A38] text-white text-sm font-bold py-3 rounded-lg transition-colors mb-3 flex items-center justify-center gap-2">
+                  <Link to="/settings" className="w-full bg-[#1E1E2C] hover:bg-[#2A2A38] border border-[#2A2A38] text-white text-sm font-bold py-3 rounded-lg transition-colors mb-3 flex items-center justify-center gap-2">
                     <Edit3 size={16}/> Edit Profile
-                  </button>
+                  </Link>
+                  
                   <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 text-gray-400 hover:text-white text-sm font-bold py-3 rounded-lg transition-colors">
                     <LogOut size={16}/> LOGOUT
                   </button>
@@ -203,12 +209,12 @@ const ProfilePage = () => {
                    <ShieldAlert size={14} className="text-[#A67CFF]"/> SECURITY TIP
                  </h3>
                  <p className="text-xs text-gray-300 leading-relaxed mb-4">Enable Two-Factor Authentication (2FA) to add an extra layer of protection to your withdrawals.</p>
-                 <button className="text-[#A67CFF] text-xs font-bold hover:underline">Setup 2FA Now →</button>
+                 <Link to="/security" className="text-[#A67CFF] text-xs font-bold hover:underline">Setup 2FA Now →</Link>
               </div>
             </div>
 
             {/* --- RIGHT COLUMN: BALANCES & TRANSACTIONS --- */}
-            <div className="flex-1 flex flex-col gap-6 lg:gap-8 min-w-0">
+            <div className="flex-1 flex flex-col w-full gap-6 lg:gap-8 min-w-0">
               
               {/* Balance Card */}
               <div className="bg-[#12121D] border border-[#2A2A38] rounded-2xl p-6 lg:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-xl">
@@ -230,21 +236,21 @@ const ProfilePage = () => {
                   <button className="w-full md:w-48 bg-[#6324E2] hover:bg-[#501bb8] text-white text-sm font-bold py-3.5 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg">
                     <Plus size={16} /> Fund Wallet
                   </button>
-                  <button className="w-full md:w-48 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-3.5 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg">
+                  <button className="w-full md:w-48 bg-[#1E1E2C] hover:bg-[#2A2A38] border border-[#2A2A38] text-white text-sm font-bold py-3.5 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg">
                     <Wallet size={16} /> Withdraw Funds
                   </button>
                 </div>
               </div>
 
               {/* Transaction History Card */}
-              <div className="bg-[#12121D] border border-[#2A2A38] rounded-2xl p-6 lg:p-8 shadow-xl overflow-hidden flex flex-col flex-1">
+              <div className="bg-[#12121D] border border-[#2A2A38] rounded-2xl p-6 lg:p-8 shadow-xl overflow-hidden flex flex-col flex-1 w-full">
                 <div className="flex justify-between items-center mb-6">
                    <h3 className="text-lg font-bold text-white">Transaction History</h3>
-                   <button className="text-xs font-bold text-[#A67CFF] hover:text-white transition-colors">View All</button>
+                   <Link to="/wallet" className="text-xs font-bold text-[#A67CFF] hover:text-white transition-colors">View All</Link>
                 </div>
 
-                <div className="overflow-x-auto -mx-6 lg:-mx-8 px-6 lg:px-8">
-                  <table className="w-full text-left border-collapse min-w-[600px]">
+                <div className="overflow-x-auto w-full -mx-2 px-2 sm:mx-0 sm:px-0 pb-2">
+                  <table className="w-full text-left border-collapse min-w-[500px]">
                     <thead>
                       <tr className="border-b border-[#2A2A38] text-[10px] text-gray-500 uppercase tracking-wider">
                         <th className="pb-4 font-bold">DATE</th>
@@ -256,26 +262,26 @@ const ProfilePage = () => {
                     <tbody className="text-sm">
                       {transactions.map((tx) => (
                         <tr key={tx.id} className="border-b border-[#2A2A38] hover:bg-[#1E1E2C] transition-colors group">
-                          <td className="py-4 text-gray-400">{tx.date}</td>
-                          <td className="py-4">
+                          <td className="py-4 text-gray-400 pr-4">{tx.date}</td>
+                          <td className="py-4 pr-4">
                             <div className="flex items-center gap-3">
-                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${tx.iconBg}`}>
+                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${tx.iconBg}`}>
                                 {tx.icon}
                               </div>
                               <div>
-                                <div className="font-bold text-gray-200 group-hover:text-white">{tx.type}</div>
-                                <div className="text-[10px] text-gray-500 mt-0.5">{tx.desc}</div>
+                                <div className="font-bold text-gray-200 group-hover:text-white whitespace-nowrap">{tx.type}</div>
+                                <div className="text-[10px] text-gray-500 mt-0.5 whitespace-nowrap">{tx.desc}</div>
                               </div>
                             </div>
                           </td>
-                          <td className="py-4">
+                          <td className="py-4 pr-4">
                             <div className="flex items-center gap-2">
-                              <span className={`font-bold ${tx.amountColor || 'text-white'}`}>{tx.amount}</span>
-                              {tx.amountColor && <ShieldCheck size={14} className="text-[#A67CFF]"/>}
+                              <span className={`font-bold whitespace-nowrap ${tx.amountColor || 'text-white'}`}>{tx.amount}</span>
+                              {tx.amountColor && <ShieldCheck size={14} className="text-[#A67CFF] shrink-0"/>}
                             </div>
                           </td>
                           <td className="py-4 text-right">
-                            <span className="text-[10px] font-bold text-gray-300 flex items-center justify-end gap-1.5">
+                            <span className="text-[10px] font-bold text-gray-300 flex items-center justify-end gap-1.5 whitespace-nowrap">
                               <div className={`w-1.5 h-1.5 rounded-full ${tx.statusDot}`}></div> {tx.status}
                             </span>
                           </td>

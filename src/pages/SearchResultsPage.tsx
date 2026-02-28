@@ -4,7 +4,7 @@ import {
   Search, ShoppingCart, User, HelpCircle, ChevronDown, 
   Menu, X, ShieldCheck, Grid, List, Heart, Star, Filter, LogOut
 } from 'lucide-react';
-import { ALL_PRODUCTS } from '../data/mockData';
+import { ALL_PRODUCTS, CATEGORIES } from '../data/mockData';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import Footer from '../components/Footer';
@@ -12,12 +12,13 @@ import Footer from '../components/Footer';
 const SearchResultsPage = () => {
   const navigate = useNavigate();
   const { cartCount } = useCart();
-  const { logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const [searchParams] = useSearchParams();
   const userQuery = searchParams.get('q') || ''; 
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   
   const [searchInput, setSearchInput] = useState(userQuery);
@@ -26,6 +27,7 @@ const SearchResultsPage = () => {
   const handleLogout = () => {
     logout();
     navigate('/');
+    setIsMobileMenuOpen(false);
   };
 
   const liveResults = searchInput.trim() === '' ? [] : ALL_PRODUCTS.filter(product => 
@@ -91,8 +93,8 @@ const SearchResultsPage = () => {
 
   return (
     <div className="min-h-screen w-screen bg-[#0A0A11] text-white font-sans flex flex-col overflow-x-hidden">
-      <nav className="bg-[#12121D] border-b border-[#2A2A38] sticky top-0 z-50 shadow-xl">
-        <div className="max-w-[1600px] mx-auto px-4 lg:px-8 py-3 sm:py-4">
+      <nav className="bg-[#12121D] border-b border-[#2A2A38] sticky top-0 z-40 shadow-xl flex flex-col">
+        <div className="max-w-[1600px] w-full mx-auto px-4 lg:px-8 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-4 lg:gap-8">
             <div className="flex items-center gap-3">
               <button className="lg:hidden text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(true)}><Menu size={24} /></button>
@@ -105,61 +107,39 @@ const SearchResultsPage = () => {
             <form onSubmit={handleSearch} className="hidden lg:flex flex-1 max-w-4xl relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <input 
-                type="text" 
-                value={searchInput}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
-                onFocus={() => setShowDropdown(true)}
-                onBlur={() => setShowDropdown(false)}
-                placeholder="Search products..."
-                className="w-full bg-[#1E1E2C] border border-[#2A2A38] rounded-full py-2.5 pl-12 pr-24 focus:outline-none focus:border-[#6324E2] transition-colors text-sm"
+                type="text" value={searchInput} onChange={handleInputChange} onKeyDown={handleKeyDown} onFocus={() => setShowDropdown(true)} onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                placeholder="Search products..." className="w-full bg-[#1E1E2C] border border-[#2A2A38] rounded-full py-2.5 pl-12 pr-24 focus:outline-none focus:border-[#6324E2] transition-colors text-sm"
               />
               <button type="submit" className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-[#6324E2] px-6 py-1.5 rounded-full font-semibold hover:bg-[#501bb8] transition-colors text-sm">SEARCH</button>
               <DropdownMenu />
             </form>
 
             <div className="flex items-center gap-4 lg:gap-8 shrink-0">
-              <div className="relative group hidden lg:block">
-                <div className="flex items-center gap-2 cursor-pointer text-gray-400 hover:text-[#6324E2] transition-colors py-2">
-                  <User size={20} />
-                  <span className="text-sm font-medium flex items-center gap-1">Account <ChevronDown size={14} className="transform group-hover:rotate-180 transition-transform"/></span>
-                </div>
-                <div className="absolute top-full right-0 w-48 bg-[#1E1E2C] border border-[#2A2A38] rounded-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col p-4 transform translate-y-2">
-                  <Link to="/profile" className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-[#2A2A38] rounded transition-colors flex items-center gap-2">
-                    <User size={16} /> My Profile
-                  </Link>
-                  <div className="h-px bg-[#2A2A38] my-1 w-full"></div>
-                  <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-colors flex items-center gap-2 font-medium">
-                    <LogOut size={16} /> Logout
-                  </button>
-                </div>
-              </div>
-
-              <Link to="/help" className="hidden sm:flex items-center gap-2 text-gray-400 hover:text-[#6324E2] transition-colors py-2">
-                <HelpCircle size={20} />
-                <span className="text-sm font-medium">Help</span>
-              </Link>
-
-              <Link to="/cart" className="flex items-center gap-2 relative text-gray-400 hover:text-[#6324E2] transition-colors py-2">
-                <ShoppingCart size={24} />
-                <span className="text-sm font-medium hidden sm:block">Cart</span>
-                <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-red-500 text-[9px] sm:text-[10px] w-4 h-4 sm:w-5 h-5 flex items-center justify-center rounded-full font-bold text-white shadow-lg">{cartCount}</span>
-              </Link>
+              <Link to="/help" className="hidden sm:flex items-center gap-2 text-gray-400 hover:text-[#6324E2] transition-colors py-2"><HelpCircle size={20} /><span className="text-sm font-medium">Help</span></Link>
+              <Link to="/cart" className="flex items-center gap-2 relative text-gray-400 hover:text-[#6324E2] transition-colors py-2"><ShoppingCart size={24} /><span className="text-sm font-medium hidden sm:block">Cart</span><span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-red-500 text-[9px] sm:text-[10px] w-4 h-4 sm:w-5 h-5 flex items-center justify-center rounded-full font-bold text-white shadow-lg">{cartCount}</span></Link>
+              
+              {isAuthenticated ? (
+                 <div className="relative group hidden lg:block">
+                  <div className="flex items-center gap-2 cursor-pointer text-gray-400 hover:text-[#6324E2] transition-colors py-2"><User size={20} /><span className="text-sm font-medium flex items-center gap-1">Account <ChevronDown size={14} className="transform group-hover:rotate-180 transition-transform"/></span></div>
+                  <div className="absolute top-full right-0 w-48 bg-[#1E1E2C] border border-[#2A2A38] rounded-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col p-4 transform translate-y-2">
+                    <Link to="/profile" className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-[#2A2A38] rounded transition-colors flex items-center gap-2"><User size={16} /> My Profile</Link>
+                    <div className="h-px bg-[#2A2A38] my-1 w-full"></div>
+                    <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-colors flex items-center gap-2 font-medium"><LogOut size={16} /> Logout</button>
+                  </div>
+                 </div>
+              ) : (
+                 <Link to="/login" className="hidden lg:flex items-center gap-2 bg-[#4812B5] hover:bg-[#3A0CA3] text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-colors shadow-lg ml-2"><User size={18} />LOGIN</Link>
+              )}
             </div>
           </div>
           
+          {/* MOBILE SEARCH - FULLY FUNCTIONAL */}
           <div className="flex lg:hidden mt-3 w-full relative z-50">
             <form onSubmit={handleSearch} className="relative w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
               <input 
-                type="text" 
-                value={searchInput}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
-                onFocus={() => setShowDropdown(true)}
-                onBlur={() => setShowDropdown(false)}
-                placeholder="Search products..."
-                className="w-full bg-[#1E1E2C] border border-[#2A2A38] rounded-full py-2 pl-10 pr-4 focus:outline-none focus:border-[#6324E2] transition-colors text-sm text-white"
+                type="text" value={searchInput} onChange={handleInputChange} onKeyDown={handleKeyDown} onFocus={() => setShowDropdown(true)} onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                placeholder="Search products..." className="w-full bg-[#1E1E2C] border border-[#2A2A38] rounded-full py-2.5 pl-10 pr-4 focus:outline-none focus:border-[#6324E2] transition-colors text-sm text-white"
               />
               <button type="submit" className="hidden"></button>
               <DropdownMenu />
@@ -168,12 +148,84 @@ const SearchResultsPage = () => {
         </div>
       </nav>
 
-      {/* --- MOBILE MENUS OVERLAYS --- */}
-      {(isMobileMenuOpen || isFilterMenuOpen) && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 lg:hidden" onClick={() => { setIsMobileMenuOpen(false); setIsFilterMenuOpen(false); }} />
+      {/* SMART MOBILE DRAWER */}
+      {isMobileMenuOpen && <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] lg:hidden" onClick={() => setIsMobileMenuOpen(false)} />}
+      
+      <aside className={`fixed top-0 left-0 h-full w-[280px] bg-[#12121D] border-r border-[#2A2A38] z-[70] flex flex-col transform transition-transform duration-300 ease-in-out lg:hidden ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="h-16 flex items-center justify-between px-4 border-b border-[#2A2A38] shrink-0 bg-[#0A0A11]">
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-7 h-7 bg-[#6324E2] rounded flex items-center justify-center font-bold text-white text-sm">X</div>
+            <span className="font-bold tracking-tight text-white">Xentra365</span>
+          </Link>
+          <button onClick={() => setIsMobileMenuOpen(false)} className="text-gray-400 hover:text-white p-1 bg-[#1E1E2C] rounded-md"><X size={18} /></button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto pb-8 no-scrollbar">
+          {isAuthenticated ? (
+            <div className="p-5 border-b border-[#2A2A38] bg-gradient-to-b from-[#1E1E2C]/50 to-transparent">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#2A2A38]">
+                  <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" alt="User" />
+                </div>
+                <div>
+                  <div className="text-base font-bold text-white leading-tight">Alex Sterling</div>
+                  <div className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-1 mt-1"><ShieldCheck size={10}/> Verified Buyer</div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <Link to="/profile" className="bg-[#4812B5] text-white text-xs font-bold py-2.5 rounded-lg text-center shadow-lg">Dashboard</Link>
+                <Link to="/wallet" className="bg-[#1E1E2C] border border-[#2A2A38] text-white text-xs font-bold py-2.5 rounded-lg text-center">Wallet</Link>
+              </div>
+            </div>
+          ) : (
+            <div className="p-5 border-b border-[#2A2A38] space-y-3 bg-gradient-to-b from-[#1E1E2C]/30 to-transparent">
+               <Link to="/login" className="flex items-center justify-center bg-[#4812B5] hover:bg-[#3A0CA3] text-white text-sm font-bold py-3 rounded-lg transition-colors shadow-lg">Log In securely</Link>
+               <Link to="/register" className="flex items-center justify-center bg-[#1E1E2C] border border-[#2A2A38] text-white text-sm font-bold py-3 rounded-lg transition-colors">Create Account</Link>
+               <div className="text-center pt-2">
+                 <Link to="#" className="text-[10px] text-[#A67CFF] font-bold uppercase tracking-wider hover:underline">Apply as a Merchant →</Link>
+               </div>
+            </div>
+          )}
+
+          <div className="p-4 border-b border-[#2A2A38]">
+            <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Marketplace Modes</h3>
+            <div className="space-y-1">
+              <Link to="/" className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-[#1E1E2C] text-sm text-white font-bold">Home</Link>
+              <Link to="#" className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-[#1E1E2C] text-sm text-gray-400 hover:text-white font-medium transition-colors">Priority Sellers</Link>
+              <Link to="#" className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-[#1E1E2C] text-sm text-gray-400 hover:text-white font-medium transition-colors">Local Marketplace</Link>
+              <Link to="#" className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-[#1E1E2C] text-sm text-gray-400 hover:text-white font-medium transition-colors">Promotions <span className="bg-orange-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">HOT</span></Link>
+              <Link to="#" className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-[#1E1E2C] text-sm text-gray-400 hover:text-white font-medium transition-colors">Bulk Wholesale</Link>
+            </div>
+          </div>
+
+          <div className="p-4">
+            <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Categories</h3>
+            <div className="flex flex-col gap-1">
+               {CATEGORIES.map((cat) => (
+                  <button key={cat.id} onClick={() => setActiveCategory(activeCategory === cat.id ? null : cat.id)} className={`flex items-center justify-between px-3 py-3 rounded-lg text-sm transition-colors ${activeCategory === cat.id ? 'bg-[#1E1E2C] text-white font-bold' : 'text-gray-400 hover:bg-[#1E1E2C] hover:text-white'}`}>
+                    <div className="flex items-center gap-3"><span className={activeCategory === cat.id ? 'text-[#6324E2]' : 'text-gray-500'}>{cat.icon}</span>{cat.name}</div>
+                    {cat.subcategories && <ChevronDown size={14} className={`transition-transform duration-200 ${activeCategory === cat.id ? 'text-[#6324E2] rotate-180' : 'text-gray-600'}`} />}
+                  </button>
+                ))}
+            </div>
+          </div>
+        </div>
+
+        {isAuthenticated && (
+          <div className="p-4 border-t border-[#2A2A38] bg-[#0A0A11] shrink-0">
+            <button onClick={handleLogout} className="flex items-center justify-center gap-2 w-full bg-red-500/10 hover:bg-red-500/20 text-red-500 text-sm font-bold py-3.5 rounded-lg transition-colors border border-red-500/20">
+              <LogOut size={16} /> Secure Logout
+            </button>
+          </div>
+        )}
+      </aside>
+
+      {/* FILTER OVERLAY */}
+      {isFilterMenuOpen && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 lg:hidden" onClick={() => setIsFilterMenuOpen(false)} />
       )}
 
-      <main className="flex-1 max-w-[1600px] w-full mx-auto px-4 lg:px-8 py-4 sm:py-6 lg:py-8 flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
+      <main className="flex-1 max-w-[1600px] w-full mx-auto px-4 lg:px-8 py-4 sm:py-6 lg:py-8 flex flex-col lg:flex-row gap-6 lg:gap-8 items-start relative z-10">
         
         {/* --- LEFT SIDEBAR (FILTERS) --- */}
         <aside className={`fixed lg:relative top-0 left-0 h-full lg:h-auto w-72 bg-[#12121D] lg:bg-transparent z-50 lg:z-auto border-r lg:border-none border-[#2A2A38] shrink-0 flex flex-col py-6 lg:py-0 transform transition-transform duration-300 ${isFilterMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} overflow-y-auto lg:overflow-visible lg:sticky lg:top-28`}>
@@ -224,7 +276,6 @@ const SearchResultsPage = () => {
             </div>
           </div>
 
-          {/* UNIFIED EDGE-TO-EDGE CARD DESIGN GRID */}
           <div className={`grid gap-2 sm:gap-4 lg:gap-6 ${viewMode === 'grid' ? 'grid-cols-3 sm:grid-cols-4 xl:grid-cols-5' : 'grid-cols-1'}`}>
             {filteredProducts.length > 0 ? (
               filteredProducts.slice(0, 15).map((item) => (

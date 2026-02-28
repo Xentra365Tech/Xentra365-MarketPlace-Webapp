@@ -114,7 +114,7 @@ const WalletPage = () => {
       <div className="flex-1 flex flex-col h-screen overflow-y-auto">
         
         {/* Top Header */}
-        <header className="h-20 bg-[#0A0A11] border-b border-[#2A2A38] px-4 lg:px-8 flex items-center justify-between sticky top-0 z-30">
+        <header className="h-20 bg-[#0A0A11] border-[#2A2A38] p-4 lg:px-8 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-4">
             <button className="lg:hidden text-gray-400 hover:text-white" onClick={() => setIsMobileSidebarOpen(true)}>
               <Menu size={24} />

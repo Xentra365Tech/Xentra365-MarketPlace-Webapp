@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Search, ShoppingCart, User, ChevronRight, ChevronDown, 
-  Menu, X, ShieldCheck, Zap, Star, Heart, LogOut, Lock, MessageCircle
+  Menu, X, ShieldCheck, Zap, Star, Heart, Lock, MessageCircle, LogOut
 } from 'lucide-react';
 import { CATEGORIES, FLASH_SALE_PRODUCTS, RECOMMENDED_PRODUCTS, ALL_PRODUCTS } from '../data/mockData';
 import { useCart } from '../context/CartContext';
@@ -37,8 +37,49 @@ const LandingPage = () => {
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setShowDropdown(true);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
+
+  const DropdownMenu = () => (
+    showDropdown && searchQuery.trim().length > 0 && (
+      <div className="absolute top-full left-0 right-0 mt-2 bg-[#1E1E2C] border border-[#2A2A38] rounded-xl shadow-2xl z-50 overflow-hidden">
+        {liveResults.length > 0 ? (
+          liveResults.map(prod => (
+            <div
+              key={prod.id}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                setSearchQuery(prod.name);
+                setShowDropdown(false);
+                navigate(`/search?q=${encodeURIComponent(prod.name)}`);
+              }}
+              className="flex items-center justify-between p-3 hover:bg-[#2A2A38] cursor-pointer transition-colors border-b border-[#2A2A38] last:border-none"
+            >
+              <div className="flex items-center gap-3 overflow-hidden">
+                <Search size={14} className="text-gray-500 shrink-0" />
+                <span className="text-xs sm:text-sm text-gray-300 line-clamp-1">{prod.name}</span>
+              </div>
+              <span className="text-[10px] sm:text-xs text-[#A67CFF] font-bold shrink-0 pl-2">{prod.price}</span>
+            </div>
+          ))
+        ) : (
+          <div className="p-4 text-sm text-gray-500 text-center">No matching products found</div>
+        )}
+      </div>
+    )
+  );
+
   return (
-    <div className="min-h-screen w-screen bg-[#0A0A11] text-white font-sans pb-20 overflow-x-hidden">
+    <div className="min-h-screen bg-[#0A0A11] text-white font-sans pb-20 overflow-x-hidden">
       
       {/* --- TOP NAVBAR --- */}
       <nav className="bg-[#12121D] border-b border-[#2A2A38] sticky top-0 z-40 shadow-xl flex flex-col">
@@ -50,30 +91,25 @@ const LandingPage = () => {
               </button>
               <Link to="/" className="flex items-center gap-2 shrink-0">
                 <div className="w-8 h-8 bg-[#6324E2] rounded-lg flex items-center justify-center font-bold text-lg text-white shadow-[0_0_15px_rgba(99,36,226,0.4)]">X</div>
-                <span className="text-xl lg:text-2xl font-bold tracking-tight sm:block">Xentra365</span>
+                <span className="text-xl lg:text-2xl font-bold tracking-tight  sm:block">Xentra365</span>
               </Link>
             </div>
 
+            {/* Desktop Search */}
             <form onSubmit={handleSearch} className="hidden lg:flex flex-1 max-w-4xl relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <input 
-                type="text" placeholder="Search for trust-verified products..." 
-                value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setShowDropdown(true); }}
-                onFocus={() => setShowDropdown(true)} onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                type="text" 
+                placeholder="Search for trust-verified products..." 
+                value={searchQuery}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                onFocus={() => setShowDropdown(true)}
+                onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
                 className="w-full bg-[#1E1E2C] border border-[#2A2A38] rounded-full py-2.5 pl-12 pr-24 focus:outline-none focus:border-[#6324E2] transition-colors text-sm"
               />
               <button type="submit" className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-[#6324E2] px-6 py-1.5 rounded-full font-bold text-xs hover:bg-[#501bb8] transition-colors shadow-lg">SEARCH</button>
-              
-              {showDropdown && searchQuery.trim().length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-[#1E1E2C] border border-[#2A2A38] rounded-xl shadow-2xl z-50 overflow-hidden">
-                  {liveResults.length > 0 ? liveResults.map(prod => (
-                    <div key={prod.id} onMouseDown={(e) => { e.preventDefault(); navigate(`/search?q=${encodeURIComponent(prod.name)}`); }} className="flex items-center justify-between p-3 hover:bg-[#2A2A38] cursor-pointer border-b border-[#2A2A38] last:border-none">
-                      <div className="flex items-center gap-3 overflow-hidden"><Search size={14} className="text-gray-500 shrink-0" /><span className="text-sm text-gray-300 line-clamp-1">{prod.name}</span></div>
-                      <span className="text-xs text-[#A67CFF] font-bold shrink-0 pl-2">{prod.price}</span>
-                    </div>
-                  )) : <div className="p-4 text-sm text-gray-500 text-center">No matching products found</div>}
-                </div>
-              )}
+              <DropdownMenu />
             </form>
 
             <div className="flex items-center gap-4 lg:gap-8 shrink-0">
@@ -83,28 +119,41 @@ const LandingPage = () => {
               </div>
               <Link to="/cart" className="flex flex-col items-center gap-1 relative text-gray-400 hover:text-white transition-colors">
                 <ShoppingCart size={24} />
-                <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:block">Cart</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider sm:block">Cart</span>
                 <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-red-500 text-[9px] sm:text-[10px] w-4 h-4 sm:w-5 h-5 flex items-center justify-center rounded-full font-bold text-white shadow-lg">{cartCount}</span>
               </Link>
-              <Link to="/login" className="flex flex-col items-center  bg-[#4812B5] hover:bg-[#3A0CA3] text-white px-6 py-2.5 rounded-full font-bold text-sm transition-colors shadow-lg ml-2"><User size={18} /><span className="text-[10px] font-bold uppercase tracking-wider  sm:block" >LOGIN</span></Link>
+              <Link to="/login" className="lg:flex items-center gap-2 bg-[#4812B5] hover:bg-[#3A0CA3] text-white px-3 py-2.5 rounded-full text-sm transition-colors shadow-lg ml-2"><User size={18} /><span className="text-[10px] font-bold uppercase tracking-wider" >LOGIN</span></Link>
               {/* <Link to="/login" className="lg:hidden text-gray-400 hover:text-white transition-colors p-1"><User size={22} /></Link> */}
             </div>
           </div>
+          
+          {/* MOBILE SEARCH - NOW FULLY FUNCTIONAL */}
           <div className="flex lg:hidden mt-3 w-full relative z-50">
             <form onSubmit={handleSearch} className="relative w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-              <input type="text" placeholder="Search products..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-[#1E1E2C] border border-[#2A2A38] rounded-full py-2 pl-10 pr-4 focus:outline-none focus:border-[#6324E2] transition-colors text-sm text-white"/>
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+              <input 
+                type="text" 
+                placeholder="Search products..." 
+                value={searchQuery}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                onFocus={() => setShowDropdown(true)}
+                onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                className="w-full bg-[#1E1E2C] border border-[#2A2A38] rounded-full py-2.5 pl-10 pr-4 focus:outline-none focus:border-[#6324E2] transition-colors text-sm text-white"
+              />
+              <button type="submit" className="hidden"></button>
+              <DropdownMenu />
             </form>
           </div>
         </div>
 
-        {/* TIER 1: SUPERIOR NAVIGATION */}
+        {/* TIER 1: SUPERIOR NAVIGATION (MODES) */}
         <div className="hidden lg:flex items-center justify-between px-8 py-3 bg-[#0A0A11] border-b border-[#2A2A38] text-sm">
            <div className="flex gap-8 font-bold text-gray-400">
              <Link to="/" className="text-[#A67CFF] border-b-2 border-[#A67CFF] pb-1">Home</Link>
              <Link to="#" className="hover:text-white transition-colors">Priority Sellers</Link>
              <Link to="#" className="hover:text-white transition-colors">Local Marketplace</Link>
-             <Link to="#" className="hover:text-white transition-colors flex items-center gap-1">Promotions <span className="bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded-full"></span></Link>
+             <Link to="#" className="hover:text-white transition-colors flex items-center gap-1">Promotions <span className="bg-orange-500 text-white text-[8px] px-1.5 py-0.5 rounded-full">HOT</span></Link>
              <Link to="#" className="hover:text-white transition-colors">Bulk Wholesale</Link>
              <Link to="#" className="hover:text-white transition-colors">New Arrivals</Link>
            </div>
@@ -113,7 +162,7 @@ const LandingPage = () => {
            </div>
         </div>
 
-        {/* TIER 2: SUB-NAVIGATION */}
+        {/* TIER 2: SUB-NAVIGATION (CATEGORIES) */}
         <div className="hidden lg:flex items-center gap-8 px-8 py-2.5 bg-[#12121D] border-b border-[#2A2A38] text-xs font-medium text-gray-500 overflow-x-auto whitespace-nowrap">
            <a href="#" className="hover:text-white transition-colors">Electronics</a>
            <div className="w-1 h-1 rounded-full bg-[#2A2A38]"></div>
@@ -127,11 +176,10 @@ const LandingPage = () => {
            <div className="w-1 h-1 rounded-full bg-[#2A2A38]"></div>
            <a href="#" className="hover:text-white transition-colors">Software & Keys</a>
         </div>
+
       </nav>
 
-      {/* ========================================= */}
-      {/* SMART MOBILE DRAWER (Handles Auth States) */}
-      {/* ========================================= */}
+      {/* SMART MOBILE DRAWER */}
       {isMobileMenuOpen && <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] lg:hidden" onClick={() => setIsMobileMenuOpen(false)} />}
       
       <aside className={`fixed top-0 left-0 h-full w-[280px] bg-[#12121D] border-r border-[#2A2A38] z-[70] flex flex-col transform transition-transform duration-300 ease-in-out lg:hidden ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
@@ -144,7 +192,6 @@ const LandingPage = () => {
         </div>
 
         <div className="flex-1 overflow-y-auto pb-8 no-scrollbar">
-          {/* AUTH BLOCK */}
           {isAuthenticated ? (
             <div className="p-5 border-b border-[#2A2A38] bg-gradient-to-b from-[#1E1E2C]/50 to-transparent">
               <div className="flex items-center gap-3 mb-5">
@@ -171,7 +218,6 @@ const LandingPage = () => {
             </div>
           )}
 
-          {/* TIER 1 NAV */}
           <div className="p-4 border-b border-[#2A2A38]">
             <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Marketplace Modes</h3>
             <div className="space-y-1">
@@ -183,7 +229,6 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* TIER 2 CATEGORIES */}
           <div className="p-4">
             <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Categories</h3>
             <div className="flex flex-col gap-1">
@@ -200,7 +245,6 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* LOGOUT ANCHOR */}
         {isAuthenticated && (
           <div className="p-4 border-t border-[#2A2A38] bg-[#0A0A11] shrink-0">
             <button onClick={handleLogout} className="flex items-center justify-center gap-2 w-full bg-red-500/10 hover:bg-red-500/20 text-red-500 text-sm font-bold py-3.5 rounded-lg transition-colors border border-red-500/20">
@@ -215,7 +259,6 @@ const LandingPage = () => {
         {/* --- HERO SECTION --- */}
         <div className="flex gap-6 relative" onMouseLeave={() => setActiveCategory(null)}>
           
-          {/* DESKTOP CATEGORY SIDEBAR */}
           <div className={`hidden lg:flex flex-col w-64 bg-transparent shrink-0`}>
             <div className="flex items-center justify-between mb-4">
               <span className="font-bold text-white flex items-center gap-2 text-sm"><Menu size={18}/> All Categories</span>
@@ -253,7 +296,11 @@ const LandingPage = () => {
           )}
 
           <div className="flex-1 rounded-xl sm:rounded-2xl relative overflow-hidden flex items-center min-h-[250px] sm:min-h-[350px] lg:min-h-[450px] border border-[#2A2A38]">
-            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1600" alt="Tech Background" className="absolute inset-0 w-full h-full object-cover object-right" />
+            <img 
+              src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1600" 
+              alt="Tech Background" 
+              className="absolute inset-0 w-full h-full object-cover object-right"
+            />
             <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A11] via-[#0A0A11]/90 to-transparent"></div>
             
             <div className="relative z-10 max-w-xl p-6 sm:p-8 lg:p-16">
@@ -294,9 +341,36 @@ const LandingPage = () => {
                     <div className="w-full bg-[#12121D] h-1.5 sm:h-2 rounded-full overflow-hidden mb-1">
                       <div className="bg-orange-500 h-full" style={{ width: `${product.soldProgress}%` }}></div>
                     </div>
+                    <div className="text-[8px] sm:text-[10px] text-gray-400 font-medium">{product.soldProgress}% Sold</div>
                   </div>
                 </Link>
               ))}
+            </div>
+          </div>
+
+          <div className="w-full lg:w-[380px] bg-gradient-to-b from-[#4812B5] to-[#2A1854] rounded-2xl p-6 lg:p-8 flex flex-col shrink-0 shadow-xl border border-[#6324E2]/30">
+            <h2 className="text-xl font-bold text-white mb-8 flex items-center gap-2">
+              <ShieldCheck className="text-blue-400" size={24}/> Why Xentra365?
+            </h2>
+            <div className="space-y-6 flex-1">
+              <div className="flex gap-4">
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0"><ShieldCheck size={16} className="text-white"/></div>
+                <div>
+                  <h4 className="font-bold text-sm text-white mb-1">Xentra Escrow</h4>
+                  <p className="text-[11px] text-purple-200 leading-relaxed">Funds are held securely until you confirm receipt and satisfaction.</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0"><User size={16} className="text-white"/></div>
+                <div>
+                  <h4 className="font-bold text-sm text-white mb-1">Verified Merchants</h4>
+                  <p className="text-[11px] text-purple-200 leading-relaxed">Every seller undergoes a rigorous identity and quality audit.</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-8 bg-white/5 rounded-xl p-4 border border-white/10">
+              <div className="text-[10px] font-bold text-purple-200 uppercase tracking-wider mb-1">TOTAL SECURED VOLUME</div>
+              <div className="text-2xl font-black text-white">$12,450,293</div>
             </div>
           </div>
         </div>

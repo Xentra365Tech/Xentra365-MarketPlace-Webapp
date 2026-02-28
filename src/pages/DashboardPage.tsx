@@ -37,6 +37,47 @@ const DashboardPage = () => {
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setShowDropdown(true);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
+
+  const DropdownMenu = () => (
+    showDropdown && searchQuery.trim().length > 0 && (
+      <div className="absolute top-full left-0 right-0 mt-2 bg-[#1E1E2C] border border-[#2A2A38] rounded-xl shadow-2xl z-50 overflow-hidden">
+        {liveResults.length > 0 ? (
+          liveResults.map(prod => (
+            <div
+              key={prod.id}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                setSearchQuery(prod.name);
+                setShowDropdown(false);
+                navigate(`/search?q=${encodeURIComponent(prod.name)}`);
+              }}
+              className="flex items-center justify-between p-3 hover:bg-[#2A2A38] cursor-pointer transition-colors border-b border-[#2A2A38] last:border-none"
+            >
+              <div className="flex items-center gap-3 overflow-hidden">
+                <Search size={14} className="text-gray-500 shrink-0" />
+                <span className="text-xs sm:text-sm text-gray-300 line-clamp-1">{prod.name}</span>
+              </div>
+              <span className="text-[10px] sm:text-xs text-[#A67CFF] font-bold shrink-0 pl-2">{prod.price}</span>
+            </div>
+          ))
+        ) : (
+          <div className="p-4 text-sm text-gray-500 text-center">No matching products found</div>
+        )}
+      </div>
+    )
+  );
+
   return (
     <div className="min-h-screen w-screen bg-[#0A0A11] text-white font-sans flex flex-col overflow-x-hidden">
       
@@ -50,14 +91,14 @@ const DashboardPage = () => {
             </button>
             <Link to="/" className="flex items-center gap-2">
               <div className="w-8 h-8 bg-[#6324E2] rounded flex items-center justify-center font-bold text-lg text-white">X</div>
-              <span className="text-xl font-bold tracking-tight hidden sm:block">Xentra365</span>
+              <span className="text-xl font-bold tracking-tight sm:block">Xentra365</span>
             </Link>
           </div>
 
           <form onSubmit={handleSearch} className="flex-1 max-w-2xl hidden md:block relative">
             <input 
               type="text" placeholder="Search marketplace (e.g. RTX 4090...)" 
-              value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setShowDropdown(true); }}
+              value={searchQuery} onChange={handleInputChange} onKeyDown={handleKeyDown}
               onFocus={() => setShowDropdown(true)} onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
               className="w-full bg-[#1E1E2C] border border-[#2A2A38] rounded-full py-2.5 pl-10 pr-16 text-sm focus:outline-none focus:border-[#6324E2] text-white"
             />
@@ -66,21 +107,11 @@ const DashboardPage = () => {
                <span className="bg-[#2A2A38] text-gray-400 text-[10px] px-2 py-1 rounded">⌘</span>
                <span className="bg-[#2A2A38] text-gray-400 text-[10px] px-2 py-1 rounded">K</span>
             </button>
-            
-            {showDropdown && searchQuery.trim().length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-[#1E1E2C] border border-[#2A2A38] rounded-xl shadow-2xl z-50 overflow-hidden">
-                {liveResults.length > 0 ? liveResults.map(prod => (
-                  <div key={prod.id} onMouseDown={(e) => { e.preventDefault(); navigate(`/search?q=${encodeURIComponent(prod.name)}`); }} className="flex items-center justify-between p-3 hover:bg-[#2A2A38] cursor-pointer border-b border-[#2A2A38] last:border-none">
-                    <div className="flex items-center gap-3 overflow-hidden"><Search size={14} className="text-gray-500 shrink-0" /><span className="text-sm text-gray-300 line-clamp-1">{prod.name}</span></div>
-                    <span className="text-[10px] text-[#A67CFF] font-bold shrink-0 pl-2">{prod.price}</span>
-                  </div>
-                )) : <div className="p-4 text-sm text-gray-500 text-center">No matching products found</div>}
-              </div>
-            )}
+            <DropdownMenu />
           </form>
 
           <div className="flex items-center gap-4 lg:gap-8 shrink-0">
-            <button className="md:hidden text-gray-400 hover:text-white"><Search size={20} /></button>
+            {/* <button className="md:hidden text-gray-400 hover:text-white"><Search size={20} /></button> */}
             
             <div className="hidden sm:flex flex-col items-center gap-1 cursor-pointer text-gray-400 hover:text-white transition-colors">
                <Bell size={20} />
@@ -115,14 +146,25 @@ const DashboardPage = () => {
                 </button>
               </div>
             </div>
-            <Link to="/profile" className="lg:hidden text-gray-400 hover:text-white transition-colors p-1"><User size={22} /></Link>
+
+            <Link to="/profile" className="lg:hidden text-gray-400 hover:text-white transition-colors p-1">
+              <User size={22} />
+            </Link>
           </div>
         </div>
 
-        <div className="px-4 pb-3 lg:hidden w-full relative block mt-2">
+        {/* MOBILE SEARCH - NOW FULLY FUNCTIONAL */}
+        <div className="px-4 pb-3 lg:hidden w-full relative block mt-2 z-50">
           <form onSubmit={handleSearch} className="relative w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-            <input type="text" placeholder="Search marketplace..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-[#1E1E2C] border border-[#2A2A38] rounded-full py-2 pl-10 pr-4 focus:outline-none focus:border-[#6324E2] text-sm text-white"/>
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+            <input 
+              type="text" placeholder="Search marketplace..." 
+              value={searchQuery} onChange={handleInputChange} onKeyDown={handleKeyDown}
+              onFocus={() => setShowDropdown(true)} onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+              className="w-full bg-[#1E1E2C] border border-[#2A2A38] rounded-full py-2.5 pl-10 pr-4 focus:outline-none focus:border-[#6324E2] text-sm text-white"
+            />
+            <button type="submit" className="hidden"></button>
+            <DropdownMenu />
           </form>
         </div>
 
@@ -132,7 +174,7 @@ const DashboardPage = () => {
              <Link to="/" className="text-[#A67CFF] border-b-2 border-[#A67CFF] pb-1">Home</Link>
              <Link to="#" className="hover:text-white transition-colors">Priority Sellers</Link>
              <Link to="#" className="hover:text-white transition-colors">Local Marketplace</Link>
-             <Link to="#" className="hover:text-white transition-colors flex items-center gap-1">Promotions <span className="bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded-full"></span></Link>
+             <Link to="#" className="hover:text-white transition-colors flex items-center gap-1">Promotions <span className="bg-orange-500 text-white text-[8px] px-1.5 py-0.5 rounded-full">HOT</span></Link>
              <Link to="#" className="hover:text-white transition-colors">Bulk Wholesale</Link>
              <Link to="#" className="hover:text-white transition-colors">New Arrivals</Link>
            </div>
@@ -157,9 +199,7 @@ const DashboardPage = () => {
         </div>
       </nav>
 
-      {/* ========================================= */}
-      {/* SMART MOBILE DRAWER (Handles Auth States) */}
-      {/* ========================================= */}
+      {/* SMART MOBILE DRAWER */}
       {isMobileMenuOpen && <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] lg:hidden" onClick={() => setIsMobileMenuOpen(false)} />}
       
       <aside className={`fixed top-0 left-0 h-full w-[280px] bg-[#12121D] border-r border-[#2A2A38] z-[70] flex flex-col transform transition-transform duration-300 ease-in-out lg:hidden ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
@@ -172,7 +212,6 @@ const DashboardPage = () => {
         </div>
 
         <div className="flex-1 overflow-y-auto pb-8 no-scrollbar">
-          {/* AUTH BLOCK */}
           {isAuthenticated ? (
             <div className="p-5 border-b border-[#2A2A38] bg-gradient-to-b from-[#1E1E2C]/50 to-transparent">
               <div className="flex items-center gap-3 mb-5">
@@ -191,15 +230,14 @@ const DashboardPage = () => {
             </div>
           ) : (
             <div className="p-5 border-b border-[#2A2A38] space-y-3 bg-gradient-to-b from-[#1E1E2C]/30 to-transparent">
-               <Link to="/login" className="flex items-center justify-center bg-[#4812B5] hover:bg-[#3A0CA3] text-white text-sm font-bold py-3 rounded-lg transition-colors shadow-lg">Log In securely</Link>
-               <Link to="/register" className="flex items-center justify-center bg-[#1E1E2C] border border-[#2A2A38] text-white text-sm font-bold py-3 rounded-lg transition-colors">Create Account</Link>
+               {/* <Link to="/login" className="flex items-center justify-center bg-[#4812B5] hover:bg-[#3A0CA3] text-white text-sm font-bold py-3 rounded-lg transition-colors shadow-lg">Log In securely</Link>
+               <Link to="/register" className="flex items-center justify-center bg-[#1E1E2C] border border-[#2A2A38] text-white text-sm font-bold py-3 rounded-lg transition-colors">Create Account</Link> */}
                <div className="text-center pt-2">
                  <Link to="#" className="text-[10px] text-[#A67CFF] font-bold uppercase tracking-wider hover:underline">Apply as a Merchant →</Link>
                </div>
             </div>
           )}
 
-          {/* TIER 1 NAV */}
           <div className="p-4 border-b border-[#2A2A38]">
             <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Marketplace Modes</h3>
             <div className="space-y-1">
@@ -211,16 +249,12 @@ const DashboardPage = () => {
             </div>
           </div>
 
-          {/* TIER 2 CATEGORIES */}
           <div className="p-4">
             <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Categories</h3>
             <div className="flex flex-col gap-1">
                {CATEGORIES.map((cat) => (
                   <button key={cat.id} onClick={() => setActiveCategory(activeCategory === cat.id ? null : cat.id)} className={`flex items-center justify-between px-3 py-3 rounded-lg text-sm transition-colors ${activeCategory === cat.id ? 'bg-[#1E1E2C] text-white font-bold' : 'text-gray-400 hover:bg-[#1E1E2C] hover:text-white'}`}>
-                    <div className="flex items-center gap-3">
-                      <span className={activeCategory === cat.id ? 'text-[#6324E2]' : 'text-gray-500'}>{cat.icon}</span>
-                      {cat.name}
-                    </div>
+                    <div className="flex items-center gap-3"><span className={activeCategory === cat.id ? 'text-[#6324E2]' : 'text-gray-500'}>{cat.icon}</span>{cat.name}</div>
                     {cat.subcategories && <ChevronDown size={14} className={`transition-transform duration-200 ${activeCategory === cat.id ? 'text-[#6324E2] rotate-180' : 'text-gray-600'}`} />}
                   </button>
                 ))}
@@ -228,7 +262,6 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* LOGOUT ANCHOR */}
         {isAuthenticated && (
           <div className="p-4 border-t border-[#2A2A38] bg-[#0A0A11] shrink-0">
             <button onClick={handleLogout} className="flex items-center justify-center gap-2 w-full bg-red-500/10 hover:bg-red-500/20 text-red-500 text-sm font-bold py-3.5 rounded-lg transition-colors border border-red-500/20">
@@ -240,7 +273,6 @@ const DashboardPage = () => {
 
       <div className="flex-1 max-w-[1600px] w-full mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6 flex flex-col lg:flex-row gap-4 sm:gap-6 items-start" onMouseLeave={() => setActiveCategory(null)}>
         
-        {/* DESKTOP CATEGORY SIDEBAR */}
         <aside className="hidden lg:flex flex-col w-64 bg-transparent shrink-0">
           <div className="flex items-center justify-between mb-4">
             <span className="font-bold flex items-center gap-2">All Categories</span>
@@ -387,7 +419,7 @@ const DashboardPage = () => {
             </div>
 
             <div className="flex flex-col gap-3">
-              <Link to="/profile" className="w-full bg-[#6324E2] hover:bg-[#501bb8] text-white text-center text-sm font-bold py-3 rounded-lg transition-colors">Fund Wallet</Link>
+              <Link to="/wallet" className="w-full bg-[#6324E2] hover:bg-[#501bb8] text-white text-center text-sm font-bold py-3 rounded-lg transition-colors">Fund Wallet</Link>
               <button className="w-full bg-[#1E1E2C] hover:bg-[#2A2A38] text-white text-sm font-bold py-3 rounded-lg transition-colors border border-[#2A2A38]">Withdraw</button>
             </div>
           </div>
