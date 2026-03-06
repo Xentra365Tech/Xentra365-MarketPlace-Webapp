@@ -14,6 +14,19 @@ import SecurityPage from './pages/SecurityPage';
 import SettingsPage from './pages/SettingsPage';
 import NotificationsPage from './pages/NotificationsPage';
 
+import SellerLogin from './pages/seller/SellerLogin';
+import SellerRegister from './pages/seller/SellerRegister';
+import SellerDashboard from './pages/seller/SellerDashboard';
+import SellerOnboarding from './pages/seller/SellerOnboarding';
+import SellerReviews from './pages/seller/SellerReviews';
+import SellerAnalytics from './pages/seller/SellerAnalytics';
+import SellerKYC from './pages/seller/SellerKYC';
+import SellerEscrowGuide from './pages/seller/SellerEscrowGuide';
+import SellerOnboardingSuccess from './pages/seller/SellerOnboardingSuccess';
+import SellerListings from './pages/seller/SellerListings';
+import SellerOrders from './pages/seller/SellerOrders';
+import SellerEscrow from './pages/seller/SellerEscrow';
+
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 
@@ -44,6 +57,19 @@ function App() {
             
             {/* Cart & Checkout */}
             <Route path="/cart" element={<CartPage />} />
+
+            <Route path="/seller/login" element={<SellerLogin />} />
+            <Route path="/seller/register" element={<SellerRegister />} />
+            <Route path="/seller/dashboard" element={<SellerDashboard />} /> 
+            <Route path="/seller/onboarding" element={<SellerOnboarding />} />
+            <Route path="/seller/reviews" element={<SellerReviews />} />
+            <Route path="/seller/analytics" element={<SellerAnalytics />} />
+            <Route path="/seller/onboarding/kyc" element={<SellerKYC />} />
+            <Route path="/seller/onboarding/escrow" element={<SellerEscrowGuide />} />
+            <Route path="/seller/onboarding/success" element={<SellerOnboardingSuccess />} />
+            <Route path="/seller/listings" element={<SellerListings />} />
+            <Route path="/seller/orders" element={<SellerOrders />} />
+            <Route path="/seller/escrow" element={<SellerEscrow />} />
           </Routes>
         </Router>
       </CartProvider>

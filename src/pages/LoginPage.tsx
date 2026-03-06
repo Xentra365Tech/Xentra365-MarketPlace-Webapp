@@ -142,6 +142,9 @@ const LoginPage = () => {
         <p className="text-center text-sm text-gray-400">
           Don't have an account? <Link to="/register" className="text-blue-500 font-medium hover:text-blue-400 transition-colors">Create Account</Link>
         </p>
+        <div className="text-center pt-2">
+           <Link to="/seller/register" className="text-[10px] text-[#A67CFF] font-bold uppercase tracking-wider hover:underline">Apply as a Merchant →</Link>
+        </div>
       </div>
     </AuthLayout>
   );
