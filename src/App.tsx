@@ -26,6 +26,9 @@ import SellerOnboardingSuccess from './pages/seller/SellerOnboardingSuccess';
 import SellerListings from './pages/seller/SellerListings';
 import SellerOrders from './pages/seller/SellerOrders';
 import SellerEscrow from './pages/seller/SellerEscrow';
+import SellerSettings from './pages/seller/SellerSettings';
+import SellerMessages from './pages/seller/SellerMessages';
+import SellerSupport from './pages/seller/SellerSupport';
 
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
@@ -70,6 +73,9 @@ function App() {
             <Route path="/seller/listings" element={<SellerListings />} />
             <Route path="/seller/orders" element={<SellerOrders />} />
             <Route path="/seller/escrow" element={<SellerEscrow />} />
+            <Route path="/seller/settings" element={<SellerSettings />} />
+            <Route path="/seller/messages" element={<SellerMessages />} />
+            <Route path="/seller/support" element={<SellerSupport />} />
           </Routes>
         </Router>
       </CartProvider>
