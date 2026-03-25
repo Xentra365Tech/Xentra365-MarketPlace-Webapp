@@ -1,5 +1,5 @@
 import React from 'react';
-import { Smartphone, Monitor, Home, Shirt, Gamepad2, Code, Wrench } from 'lucide-react';
+import { Smartphone, Monitor, Home, Shirt, Gamepad2 } from 'lucide-react';
 
 // --- CATEGORIES ---
 export const CATEGORIES = [
@@ -46,27 +46,22 @@ export const CATEGORIES = [
   },
 ];
 
-export const DASHBOARD_CATEGORIES = [
-  { id: 'electronics', name: 'Electronics', icon: React.createElement(Monitor, { size: 16 }) },
-  { id: 'software', name: 'Software & Keys', icon: React.createElement(Code, { size: 16 }), active: true },
-  { id: 'b2b', name: 'B2B Services', icon: React.createElement(Wrench, { size: 16 }) },
-];
-
-export const HERO_CATEGORIES = [
-  'Women\'s Clothing', 'Smart Devices', 'Luxury Goods', 'Gaming Gear', 
-  'Beauty Care', 'Sportswear', 'Home Decor', 'Digital Asset'
-];
-
 export const RECENT_ORDERS = [
   { id: "#ORD-98211", name: "RTX 4090 Workstation", eta: "ETA: 2 Days", price: "$1,450.00", status: "SHIPPED", statusColor: "text-orange-400" },
   { id: "#ORD-98190", name: "API License (Premium)", eta: "July 22, 2023", price: "$299.00", status: "COMPLETED", statusColor: "text-green-400" },
+  { id: "#ORD-97742", name: "Sony WH-1000XM5", eta: "Delivered", price: "$348.00", status: "COMPLETED", statusColor: "text-green-400" },
 ];
 
+// Expanded to 8 unique items for the continuous slider
 export const FLASH_SALE_PRODUCTS = [
   { id: 1, name: "Luxury Chronograph Watch", price: "$299.00", oldPrice: "$550.00", discount: "-45%", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80", soldProgress: 85 },
   { id: 2, name: "Performance Running Shoes", price: "$120.00", oldPrice: "$170.00", discount: "-30%", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80", soldProgress: 40 },
   { id: 3, name: "Noise Cancelling Headphones", price: "$89.50", oldPrice: "$150.00", discount: "-60%", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80", soldProgress: 95 },
-  { id: 4, name: "Minimalist Smart Speaker", price: "$45.00", oldPrice: "$60.00", discount: "-15%", image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&q=80", soldProgress: 12 }
+  { id: 4, name: "Minimalist Smart Speaker", price: "$45.00", oldPrice: "$60.00", discount: "-15%", image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&q=80", soldProgress: 12 },
+  { id: 5, name: "4K Action Camera Ultra", price: "$150.00", oldPrice: "$250.00", discount: "-40%", image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&q=80", soldProgress: 70 },
+  { id: 6, name: "Designer Leather Handbag", price: "$199.00", oldPrice: "$399.00", discount: "-50%", image: "https://images.unsplash.com/photo-1584916201218-f4242ceb4809?w=400&q=80", soldProgress: 60 },
+  { id: 7, name: "Mechanical Gaming Keyboard", price: "$75.00", oldPrice: "$120.00", discount: "-37%", image: "https://images.unsplash.com/photo-1595225476474-87563907a212?w=400&q=80", soldProgress: 88 },
+  { id: 8, name: "Smart Fitness Tracker", price: "$35.00", oldPrice: "$70.00", discount: "-50%", image: "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b0?w=400&q=80", soldProgress: 25 }
 ];
 
 // --- MASSIVE PRODUCT DATABASE GENERATOR ---
@@ -77,15 +72,16 @@ const BASE_PRODUCTS = [
   { name: "AcousticSeal B2B Headset", category: "Hardware", desc: "Noise isolating, dual mic", priceBase: 149, image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&q=80", tag: "Verified", isEscrow: true },
   { name: "Enterprise Security Token v4", category: "Software", desc: "Hardware MFA encryption", priceBase: 89, image: "https://images.unsplash.com/photo-1633265486064-086b219458ce?w=400&q=80", tag: "Verified", isEscrow: true },
   { name: "Managed 48-Port PoE Switch", category: "Hardware", desc: "Fiber Uplink, Cloud", priceBase: 670, image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400&q=80", tag: "Escrow", isEscrow: true },
-  { name: "TensorFlow Optimized GPU", category: "Hardware", desc: "24GB VRAM, AI Training", priceBase: 1899, image: "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=400&q=80", tag: "Verified", isEscrow: true },
+  { name: "Premium Artisan Perfume", category: "Fashion", desc: "100ml, Woody Notes", priceBase: 120, image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=400&q=80", tag: "Verified", isEscrow: false },
+  { name: "Professional Drone Kit", category: "Electronics", desc: "4K Camera, 3 Batteries", priceBase: 850, image: "https://images.unsplash.com/photo-1507582020474-9a35b7d455d9?w=400&q=80", tag: "Escrow", isEscrow: true },
+  { name: "Ergonomic Office Chair", category: "Furniture", desc: "Lumbar support, Mesh", priceBase: 240, image: "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=400&q=80", tag: "Verified", isEscrow: true },
+  { name: "Curved Ultrawide Monitor", category: "Hardware", desc: "34-inch, 144Hz, 1ms", priceBase: 499, image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&q=80", tag: "Verified", isEscrow: false },
   { name: "Cloud Storage Array - 100TB", category: "Hardware", desc: "Enterprise HDD, Rackmount", priceBase: 3400, image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&q=80", tag: "Verified", isEscrow: false },
-  { name: "SaaS Integration Engine", category: "Software", desc: "Enterprise License, API", priceBase: 2100, image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&q=80", tag: "Escrow", isEscrow: true },
   { name: "Biometric Access Terminal", category: "Hardware", desc: "Retina + Fingerprint scanner", priceBase: 550, image: "https://images.unsplash.com/photo-1555664424-778a1e5e1b48?w=400&q=80", tag: "Verified", isEscrow: true },
 ];
 
 const LOCATIONS = ["NYC, USA", "LONDON, UK", "BERLIN, DE", "TOKYO, JP", "SHANGHAI, CN", "PARIS, FR", "DUBAI, UAE"];
 
-// This function multiplies our base products to create hundreds of search results
 const generateMassiveDatabase = (targetCount: number) => {
   const db = [];
   for (let i = 0; i < targetCount; i++) {
@@ -109,8 +105,7 @@ const generateMassiveDatabase = (targetCount: number) => {
   return db;
 };
 
-// Generates 400 products automatically!
 export const ALL_PRODUCTS = generateMassiveDatabase(400);
 
-// Just grab the first 12 for the Dashboard/Landing page recommendations
-export const RECOMMENDED_PRODUCTS = ALL_PRODUCTS.slice(0, 12);
+// We grab the first 24 items now to make the grids massive and busy!
+export const RECOMMENDED_PRODUCTS = ALL_PRODUCTS.slice(0, 24);

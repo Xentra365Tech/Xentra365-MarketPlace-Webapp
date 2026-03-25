@@ -1,18 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
-  Search, ShoppingCart, User, ChevronRight, Menu, 
+   ShoppingCart, ChevronRight, 
   ShieldCheck, Star, Heart, Truck, RotateCcw, MessageSquare, Zap
 } from 'lucide-react';
 import { ALL_PRODUCTS, RECOMMENDED_PRODUCTS } from '../data/mockData';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  const { addToCart, cartCount } = useCart();
+  const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   
   useEffect(() => {
@@ -21,7 +24,7 @@ const ProductDetailsPage = () => {
 
   const product = ALL_PRODUCTS.find(p => p.id === Number(id)) || RECOMMENDED_PRODUCTS[0];
 
-  const [, setIsMobileMenuOpen] = useState(false);
+  
   const [activeTab, setActiveTab] = useState('description');
   
   const [activeImage, setActiveImage] = useState(product.image);
@@ -54,42 +57,7 @@ const ProductDetailsPage = () => {
 
   return (
     <div className="min-h-screen w-screen bg-[#0A0A11] text-white font-sans flex flex-col overflow-x-hidden">
-      
-      {/* --- MINIMAL NAVBAR --- */}
-      <nav className="bg-[#12121D] border-b border-[#2A2A38] sticky top-0 z-50">
-        <div className="max-w-[1600px] mx-auto px-4 lg:px-8 py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <button className="lg:hidden text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(true)}>
-              <Menu size={24} />
-            </button>
-            <Link to="/" className="flex items-center gap-2 shrink-0">
-              <div className="w-8 h-8 lg:w-10 lg:h-10 bg-[#6324E2] rounded-lg flex items-center justify-center font-bold text-lg lg:text-xl text-white shadow-[0_0_15px_rgba(99,36,226,0.4)]">X</div>
-              <span className="text-xl lg:text-2xl font-bold tracking-tight hidden sm:block">Xentra365</span>
-            </Link>
-          </div>
-
-          <div className="flex-1 max-w-2xl relative hidden md:block">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-            <input 
-              type="text" placeholder="Search secure listings..." 
-              className="w-full bg-[#1E1E2C] border border-[#2A2A38] rounded-full py-2.5 pl-12 pr-4 focus:outline-none focus:border-[#6324E2] transition-colors text-sm"
-              onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/search?q=${e.currentTarget.value}`) }}
-            />
-          </div>
-
-          <div className="flex items-center gap-4 lg:gap-6 shrink-0">
-            <Link to="/cart" className="flex items-center gap-2 relative text-gray-400 hover:text-white transition-colors">
-              <ShoppingCart size={24} />
-              <span className="absolute -top-1 -right-2 bg-red-500 text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold text-white shadow-lg">
-                {cartCount}
-              </span>
-            </Link>
-            <button className="flex items-center gap-2 bg-[#1E1E2C] border border-[#2A2A38] px-4 py-2 rounded-full text-sm font-medium hover:border-[#6324E2] transition-colors">
-              <User size={16}/> <span className="hidden sm:block">Account</span>
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       <main className="flex-1 max-w-[1400px] w-full mx-auto px-4 lg:px-8 py-6 lg:py-10">
         
@@ -105,7 +73,7 @@ const ProductDetailsPage = () => {
         {/* --- TOP SECTION: GALLERY & DETAILS --- */}
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 mb-12">
           
-          <div className="w-full lg:w-[55%] flex flex-col gap-4">
+          <div className="w-full lg:w-[30%] flex flex-col gap-4">
             <div className="relative aspect-square sm:aspect-[4/3] lg:aspect-square bg-[#1E1E2C] rounded-2xl border border-[#2A2A38] overflow-hidden flex items-center justify-center group">
               <img src={activeImage} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               {product.isEscrow && (
@@ -307,28 +275,7 @@ const ProductDetailsPage = () => {
 
       </main>
 
-      {/* --- FOOTER --- */}
-      <footer className="bg-[#0A0A11] border-t border-[#2A2A38] mt-auto">
-        <div className="max-w-[1600px] mx-auto px-4 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-6">
-             <div className="flex items-center gap-2">
-               <ShieldCheck className="text-blue-500" size={24}/>
-               <div>
-                 <div className="text-xs font-bold text-white uppercase tracking-wider">BUYER PROTECTION</div>
-                 <div className="text-[10px] text-gray-500">Full refund for 30 days</div>
-               </div>
-             </div>
-             <div className="w-px h-8 bg-[#2A2A38] hidden sm:block"></div>
-             <div className="flex items-center gap-2">
-               <ShieldCheck className="text-[#6324E2]" size={24}/>
-               <div>
-                 <div className="text-xs font-bold text-white uppercase tracking-wider">ESCROW SECURED</div>
-                 <div className="text-[10px] text-gray-500">Funds released on delivery</div>
-               </div>
-             </div>
-          </div>
-        </div>
-      </footer>
+    <Footer/>
     </div>
   );
 };
@@ -336,5 +283,4 @@ const ProductDetailsPage = () => {
 const CheckCircle = ({ size }: { size: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
 )
-
 export default ProductDetailsPage;
