@@ -52,24 +52,23 @@ const Header = () => {
     setExpandedSubcategories(prev => prev.includes(title) ? prev.filter(t => t !== title) : [...prev, title]);
   };
 
-  // FIX: Force the app to act "Logged In" if we are on the dashboard page for mockup purposes
   const isUserLoggedIn = isAuthenticated || location.pathname.includes('/dashboard');
 
   return (
     <>
       <nav className="bg-white dark:bg-[#12121D] border-b border-gray-200 dark:border-[#2A2A38] sticky top-0 z-50 shadow-md flex flex-col transition-colors">
-        <div className="max-w-[1600px] w-full mx-auto px-4 lg:px-8 py-4">
-          <div className="flex items-center justify-between gap-4 lg:gap-8">
-            <div className="flex items-center gap-4 shrink-0">
+        <div className="max-w-[1600px] w-full mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-4">
+          <div className="flex items-center justify-between gap-3 lg:gap-8">
+            <div className="flex items-center gap-2 sm:gap-4 shrink-0">
               <button 
-                className="lg:hidden p-2 rounded-lg bg-gray-100 text-gray-700 dark:bg-[#1E1E2C] dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#2A2A38] transition-colors" 
+                className="lg:hidden p-1.5 sm:p-2 rounded-lg bg-gray-100 text-gray-700 dark:bg-[#1E1E2C] dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#2A2A38] transition-colors" 
                 onClick={() => setIsMobileMenuOpen(true)}
               >
-                <Menu size={24} />
+                <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
-              <Link to="/" className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#6324E2] rounded-lg flex items-center justify-center font-bold text-xl text-white shadow-[0_0_15px_rgba(99,36,226,0.4)]">X</div><p>Xentra 365</p>
-                {/* <span className="text-2xl font-bold tracking-tight hidden sm:block text-gray-900 dark:text-white">Xentra365</span> */}
+              <Link to="/" className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#6324E2] rounded-lg flex items-center justify-center font-bold text-lg sm:text-xl text-white shadow-[0_0_15px_rgba(99,36,226,0.4)]">X</div>
+                <span className="text-lg sm:text-2xl font-bold tracking-tight hidden sm:block text-gray-900 dark:text-white">Xentra365</span>
               </Link>
             </div>
 
@@ -92,21 +91,20 @@ const Header = () => {
               )}
             </form>
 
-            <div className="flex items-center gap-4 lg:gap-6 shrink-0">
-              <button onClick={toggleTheme} className="p-2 rounded-full bg-gray-100 dark:bg-[#1E1E2C] text-gray-600 dark:text-gray-400 hover:text-[#6324E2] dark:hover:text-white transition-colors">
-                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 shrink-0">
+              <button onClick={toggleTheme} className="p-1.5 sm:p-2 rounded-full bg-gray-100 dark:bg-[#1E1E2C] text-gray-600 dark:text-gray-400 hover:text-[#6324E2] dark:hover:text-white transition-colors">
+                {isDarkMode ? <Sun className="w-4 h-4 sm:w-5 sm:h-5" /> : <Moon className="w-4 h-4 sm:w-5 sm:h-5" />}
               </button>
               <div className="hidden sm:flex flex-col items-center gap-1 cursor-pointer text-gray-600 dark:text-gray-400 hover:text-[#6324E2] dark:hover:text-white transition-colors">
                 <ShieldCheck size={24} />
                 <span className="text-[10px] font-bold uppercase tracking-wider">Escrow</span>
               </div>
               <Link to="/cart" className="flex flex-col items-center gap-1 relative text-gray-600 dark:text-gray-400 hover:text-[#6324E2] dark:hover:text-white transition-colors">
-                <ShoppingCart size={28} />
+                <ShoppingCart className="w-5 h-5 sm:w-7 sm:h-7" />
                 <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:block">Cart</span>
-                <span className="absolute -top-2 -right-2 bg-red-500 text-xs w-5 h-5 flex items-center justify-center rounded-full font-bold text-white shadow-lg">{cartCount}</span>
+                <span className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 bg-red-500 text-[10px] sm:text-xs w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center rounded-full font-bold text-white shadow-lg">{cartCount}</span>
               </Link>
               
-              {/* RESTORED & FIXED User Profile Dropdown */}
               {isUserLoggedIn ? (
                 <div className="relative group hidden lg:block">
                   <div className="flex items-center gap-3 cursor-pointer pl-4 border-l border-gray-200 dark:border-[#2A2A38] py-1">
@@ -136,14 +134,15 @@ const Header = () => {
                   <User size={18} /> LOGIN
                 </Link>
               )}
-              <Link to={isUserLoggedIn ? "/profile" : "/login"} className="lg:hidden text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors p-1"><User size={28} /></Link>
+              <Link to={isUserLoggedIn ? "/profile" : "/login"} className="lg:hidden text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors p-1"><User className="w-5 h-5 sm:w-7 sm:h-7" /></Link>
             </div>
           </div>
           
-          <div className="flex lg:hidden mt-4 w-full relative z-[55]">
+          {/* RESPONSIVE: Tightened Mobile Search Padding */}
+          <div className="flex lg:hidden mt-3 sm:mt-4 w-full relative z-[55]">
             <form onSubmit={handleSearch} className="relative w-full">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              <input type="text" placeholder="Search products..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-gray-100 dark:bg-[#1E1E2C] border border-gray-300 dark:border-[#2A2A38] rounded-full py-3 pl-12 pr-4 focus:outline-none focus:border-[#6324E2] transition-colors text-sm text-gray-900 dark:text-white shadow-sm" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
+              <input type="text" placeholder="Search products..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-gray-100 dark:bg-[#1E1E2C] border border-gray-300 dark:border-[#2A2A38] rounded-full py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 focus:outline-none focus:border-[#6324E2] transition-colors text-xs sm:text-sm text-gray-900 dark:text-white shadow-sm" />
             </form>
           </div>
         </div>
