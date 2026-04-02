@@ -22,7 +22,7 @@ const AuthLayout = ({ children, leftIcon, leftTitle, leftSubtitle }: AuthLayoutP
       </Link>
 
       {/* Main Card Container */}
-      <div className="flex flex-col lg:flex-row bg-[#13131D] rounded-3xl overflow-hidden max-w-[1000px] w-full shadow-2xl mt-12 sm:mt-0">
+      <div className="flex flex-col lg:flex-row bg-[#13131D] dark:bg-gray-50 rounded-3xl overflow-hidden max-w-[1000px] w-full shadow-2xl mt-12 sm:mt-0">
         
         {/* Left Panel */}
         <div className="w-full lg:w-[45%] bg-[#1E1E2C] p-8 lg:p-12 flex flex-col items-center justify-center text-center border-b lg:border-b-0 lg:border-r border-gray-800">

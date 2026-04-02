@@ -132,7 +132,7 @@ const LandingPage = () => {
 
         {/* --- FLASH SALES --- */}
         <div>
-          <div className="flex items-center justify-between bg-red-500 rounded-t-lg sm:rounded-t-xl px-3 sm:px-4 py-2 sm:py-3">
+          <div className="flex items-center justify-between bg-red-800 rounded-t-lg sm:rounded-t-xl px-3 sm:px-4 py-2 sm:py-3">
             <h2 className="text-xs sm:text-base font-bold text-white flex items-center gap-1 sm:gap-2"><Zap className="text-yellow-300 w-3 h-3 sm:w-[18px] sm:h-[18px]" fill="currentColor"/> Flash Sales</h2>
             <Link to="#" className="text-white text-[10px] sm:text-xs font-medium hover:underline">See All {'>'}</Link>
           </div>
@@ -148,7 +148,7 @@ const LandingPage = () => {
                   <h3 className="text-[9px] sm:text-xs text-gray-700 dark:text-gray-200 line-clamp-1 mb-0.5 sm:mb-1">{product.name}</h3>
                   <div className="font-black text-gray-900 dark:text-white text-[11px] sm:text-sm">{product.price}</div>
                   <div className="w-full bg-gray-200 dark:bg-[#2A2A38] h-1 sm:h-1.5 rounded-full mt-1.5 sm:mt-2 overflow-hidden">
-                    <div className="bg-orange-500 h-full" style={{ width: `${product.soldProgress}%` }}></div>
+                    <div className="bg-purple-600 h-full" style={{ width: `${product.soldProgress}%` }}></div>
                   </div>
                   <div className="text-[8px] sm:text-[9px] text-gray-500 mt-0.5 sm:mt-1">{100 - product.soldProgress}% left</div>
                 </div>
@@ -174,7 +174,7 @@ const LandingPage = () => {
                   <div className="absolute bottom-1 left-1 flex flex-wrap gap-1 z-30">
                     {product.tag === 'Verified' && (
                       <span className="bg-emerald-600 text-white text-[7px] sm:text-[8px] font-bold px-1 py-0.5 rounded flex items-center gap-0.5">
-                         <ShieldCheck className="w-2 h-2 sm:w-[10px] sm:h-[10px]" /> <span className="hidden sm:inline">Verified</span>
+                         <ShieldCheck className="w-2 h-2 sm:w-[10px] sm:h-[10px]" /> <span className="hidden sm:inline"></span>
                       </span>
                     )}
                   </div>

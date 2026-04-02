@@ -42,7 +42,7 @@ const HERO_SLIDES = [
   }
 ];
 
-// RESPONSIVE: Applied Tailwind w/h classes to icons for scalability
+// RESPONSIVe
 const QUICK_PROMOS = [
   { id: 1, title: "Awoof Deals", icon: <Flame className="w-5 h-5 sm:w-6 sm:h-6"/>, color: "bg-red-500" },
   { id: 2, title: "Clearance", icon: <Gift className="w-5 h-5 sm:w-6 sm:h-6"/>, color: "bg-orange-500" },
@@ -154,7 +154,7 @@ const DashboardPage = () => {
                       <h3 className="text-[9px] sm:text-[10px] lg:text-xs text-gray-700 dark:text-gray-200 line-clamp-1 mb-0.5 sm:mb-1">{product.name}</h3>
                       <div className="font-black text-gray-900 dark:text-white text-[11px] sm:text-xs lg:text-sm">{product.price}</div>
                       <div className="w-full bg-gray-200 dark:bg-[#2A2A38] h-1 sm:h-1.5 rounded-full mt-1 sm:mt-2 overflow-hidden">
-                        <div className="bg-orange-500 h-full" style={{ width: `${product.soldProgress}%` }}></div>
+                        <div className="bg-purple-600 h-full" style={{ width: `${product.soldProgress}%` }}></div>
                       </div>
                       <div className="text-[8px] sm:text-[9px] text-gray-500 mt-0.5 sm:mt-1">{100 - product.soldProgress}% left</div>
                     </div>

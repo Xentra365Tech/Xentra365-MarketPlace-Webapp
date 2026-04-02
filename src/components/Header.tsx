@@ -156,7 +156,7 @@ const Header = () => {
              <Link to="/dashboard" className="text-[#6324E2] dark:text-[#A67CFF] border-b-2 border-[#6324E2] dark:border-[#A67CFF] pb-1">Dashboard</Link>
              <Link to="/seller/register" className="hover:text-[#6324E2] dark:hover:text-white transition-colors">Xentra Sellers</Link>
              <Link to="#" className="hover:text-[#6324E2] dark:hover:text-white transition-colors">Local Marketplace</Link>
-             <Link to="#" className="hover:text-[#6324E2] dark:hover:text-white transition-colors">International Marketplace</Link>
+             {/* <Link to="#" className="hover:text-[#6324E2] dark:hover:text-white transition-colors">International Marketplace</Link> */}
              <Link to="#" className="hover:text-[#6324E2] dark:hover:text-white transition-colors flex items-center gap-1">Promotions <span className="bg-orange-500 text-white text-[10px] px-1.5 py-0.5 rounded-sm">HOT</span></Link>
              <Link to="#" className="hover:text-[#6324E2] dark:hover:text-white transition-colors">Bulk Wholesale</Link>
            </div>
