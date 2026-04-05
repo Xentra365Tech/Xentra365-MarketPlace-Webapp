@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { 
-  Filter, X, Grid, List, ChevronLeft, ChevronRight, Heart, ShieldCheck, Star 
+  Filter, X, Grid, List, ChevronLeft, ChevronRight, Heart, ShieldCheck, Star, Search 
 } from 'lucide-react';
 import { ALL_PRODUCTS, CATEGORIES } from '../data/mockData';
 import Header from '../components/Header';

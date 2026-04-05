@@ -10,6 +10,23 @@ import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
+interface Product {
+  id: number;
+  name: string;
+  price: string;
+  oldPrice?: string;
+  discount?: string;
+  image: string;
+  soldProgress?: number;
+  desc?: string;
+  category?: string;
+  rating?: string;
+  reviews?: string | number;
+  isEscrow?: boolean;
+  isVerified?: boolean;
+  // add any other missing ones here
+}
+
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -22,11 +39,12 @@ const ProductDetailsPage = () => {
   }, [id]);
 
   // BUG FIX: Check both ALL_PRODUCTS and FLASH_SALE_PRODUCTS so Flash Sales actually load!
-  const product = 
-    ALL_PRODUCTS.find(p => p.id === Number(id)) || 
-    FLASH_SALE_PRODUCTS.find(p => p.id === Number(id)) || 
-    RECOMMENDED_PRODUCTS[0];
   
+const product = (
+  ALL_PRODUCTS.find((p) => p.id === Number(id)) || 
+  FLASH_SALE_PRODUCTS.find((p) => p.id === Number(id)) || 
+  RECOMMENDED_PRODUCTS[0]
+) as Product;
   const [activeTab, setActiveTab] = useState('description');
   
   const [activeImage, setActiveImage] = useState(product.image);

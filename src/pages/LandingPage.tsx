@@ -42,7 +42,7 @@ const HERO_SLIDES = [
 
 const QUICK_PROMOS = [
   { id: 1, title: "Awoof Deals", icon: <Flame className="w-5 h-5 sm:w-6 sm:h-6"/>, color: "bg-red-500" },
-  { id: 2, title: "Clearance", icon: <Gift className="w-5 h-5 sm:w-6 sm:h-6"/>, color: "bg-orange-500" },
+  // { id: 2, title: "Clearance", icon: <Gift className="w-5 h-5 sm:w-6 sm:h-6"/>, color: "bg-orange-500" },
   { id: 3, title: "Buy 1 Get 1", icon: <Star className="w-5 h-5 sm:w-6 sm:h-6"/>, color: "bg-blue-500" },
   { id: 4, title: "Free Delivery", icon: <Truck className="w-5 h-5 sm:w-6 sm:h-6"/>, color: "bg-emerald-500" },
   { id: 5, title: "Top Picks", icon: <Star className="w-5 h-5 sm:w-6 sm:h-6"/>, color: "bg-purple-500" },
@@ -161,7 +161,7 @@ const LandingPage = () => {
         <div>
           <div className="flex items-center justify-between mb-3 sm:mb-4">
             <h2 className="text-sm sm:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-1.5 sm:gap-2">
-              <p className="text-orange-500 w-4 h-4 sm:w-5 sm:h-5" fill="currentColor"> Recommended For You </p>
+              <p className="text-orange-500 w-4 h-4 sm:w-5 sm:h-5"> Recommended</p>
             </h2>
           </div>
           

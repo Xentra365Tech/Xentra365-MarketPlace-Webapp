@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { 
   Wallet, ShieldCheck, ShieldAlert, Star, Plus, HelpCircle, Lock, Edit3,
   ShoppingCart, RotateCcw, FileText, ArrowDownLeft, LogOut
@@ -11,7 +12,8 @@ import ProfileSidebar from '../components/ProfileSidebar';
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
-
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  
   const handleLogout = () => {
     logout();
     navigate('/');
@@ -33,7 +35,7 @@ const ProfilePage = () => {
       <main className="flex-1 max-w-[1600px] w-full mx-auto flex flex-col lg:flex-row gap-6 lg:gap-8 px-0 sm:px-6 lg:px-8 py-4 sm:py-8 lg:py-10">
         
         {/* REUSABLE SIDEBAR */}
-        <ProfileSidebar />
+        <ProfileSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
         {/* PAGE CONTENT */}
         <div className="flex-1 px-3 sm:px-0 min-w-0">

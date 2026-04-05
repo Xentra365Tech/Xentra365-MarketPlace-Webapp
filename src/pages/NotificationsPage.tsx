@@ -6,6 +6,7 @@ import ProfileSidebar from '../components/ProfileSidebar';
 
 const NotificationsPage = () => {
   const [activeFilter, setActiveFilter] = useState('All');
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const notifications = [
     { id: 1, type: 'security', title: 'New login detected', message: 'We noticed a new login to your account from Chrome on Windows 11 in London, UK.', time: '10 mins ago', unread: true, icon: <AlertTriangle className="w-4 h-4 sm:w-[18px] sm:h-[18px]"/>, color: 'text-orange-600 bg-orange-100 dark:text-orange-500 dark:bg-orange-500/10' },
@@ -24,7 +25,7 @@ const NotificationsPage = () => {
       <main className="flex-1 max-w-[1600px] w-full mx-auto flex flex-col lg:flex-row gap-6 lg:gap-8 px-0 sm:px-6 lg:px-8 py-4 sm:py-8 lg:py-10">
         
         {/* REUSABLE SIDEBAR */}
-        <ProfileSidebar />
+        <ProfileSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
         {/* PAGE CONTENT */}
         <div className="flex-1 px-3 sm:px-0 min-w-0">
