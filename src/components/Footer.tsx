@@ -1,17 +1,20 @@
 import { Link } from 'react-router-dom';
 import { 
-  Facebook, Twitter, Instagram, Youtube, 
   ShieldCheck, CreditCard
 } from 'lucide-react';
+
+// import Facebook from '/facebook.svg';
+// import Google from '/google.svg';
+// import Apple from '/apple.svg';
+// import Outlook from '/outlook.svg';
 
 const Footer = () => {
   return (
     <footer className="bg-white dark:bg-[#0A0A11] border-t border-gray-200 dark:border-[#2A2A38] mt-auto w-full transition-colors duration-300">
       
-      {/* RESPONSIVE: Tightened padding on mobile */}
       <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-10 lg:py-16">
         
-        {/* RESPONSIVE: Changed from grid-cols-1 to grid-cols-2 on mobile, shrinking gaps */}
+        
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-8 sm:gap-8 lg:gap-12 mb-8 sm:mb-12">
           
           {/* Column 1: Customer Service */}
@@ -72,11 +75,29 @@ const Footer = () => {
             </p>
             
             <h4 className="text-[9px] sm:text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-2 sm:mb-4">Connect With Us</h4>
+            
             <div className="flex items-center gap-2 sm:gap-3">
-              <button className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-gray-100 dark:bg-[#1E1E2C] border border-gray-200 dark:border-[#2A2A38] flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-[#6324E2] dark:hover:text-white hover:border-[#6324E2] dark:hover:border-[#6324E2] transition-colors"><Facebook className="w-3 h-3 sm:w-[18px] sm:h-[18px]" fill="currentColor" /></button>
-              <button className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-gray-100 dark:bg-[#1E1E2C] border border-gray-200 dark:border-[#2A2A38] flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-[#6324E2] dark:hover:text-white hover:border-[#6324E2] dark:hover:border-[#6324E2] transition-colors"><Twitter className="w-3 h-3 sm:w-[18px] sm:h-[18px]" fill="currentColor" /></button>
-              <button className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-gray-100 dark:bg-[#1E1E2C] border border-gray-200 dark:border-[#2A2A38] flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-[#6324E2] dark:hover:text-white hover:border-[#6324E2] dark:hover:border-[#6324E2] transition-colors"><Instagram className="w-3 h-3 sm:w-[18px] sm:h-[18px]" /></button>
-              <button className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-gray-100 dark:bg-[#1E1E2C] border border-gray-200 dark:border-[#2A2A38] flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-[#6324E2] dark:hover:text-white hover:border-[#6324E2] dark:hover:border-[#6324E2] transition-colors"><Youtube className="w-3 h-3 sm:w-[18px] sm:h-[18px]" fill="currentColor" /></button>
+              {[
+                { name: 'Facebook', icon: '/assets/facebook.svg', providerId: 'facebook' },
+                { name: 'Outlook', icon: '/assets/outlook.svg', providerId: 'microsoft' },
+                { name: 'Google', icon: '/assets/google.svg', providerId: 'google' },
+                { name: 'Apple', icon: '/assets/apple.svg', providerId: 'apple' }
+              ].map((social) => (
+                <button 
+                  key={social.name}
+                  onClick={() => {
+                    console.log(`Initiating connect with ${social.name}...`);
+                  }}
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-transparent border-none p-0 hover:scale-110 hover:opacity-80 transition-all cursor-pointer focus:outline-none flex items-center justify-center hover:border-[#6324E2] dark:hover:border-[#A67CFF]  "
+                  aria-label={`Connect using ${social.name}`}
+                >
+                  <img 
+                    src={social.icon} 
+                    alt={social.name} 
+                    className={`w-4 h-4 sm:w-5 sm:h-5 object-contain group-hover:opacity-80 transition-opacity ${social.name === 'Apple' ? 'dark:invert' : ''}`} 
+                  />
+                </button>
+              ))}
             </div>
           </div>
 

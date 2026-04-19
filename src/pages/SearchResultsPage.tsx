@@ -107,9 +107,9 @@ const SearchResultsPage = () => {
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-5 border-b border-gray-200 dark:border-[#2A2A38] pb-3 sm:pb-4 mb-4 sm:mb-6">
             <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto whitespace-nowrap no-scrollbar text-xs sm:text-sm font-bold">
-              <button className="text-[#6324E2] dark:text-[#A67CFF] border-b-2 border-[#6324E2] dark:border-[#A67CFF] pb-3 sm:pb-4 -mb-[13px] sm:-mb-[17px]">Popularity</button>
-              <button className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white pb-3 sm:pb-4 -mb-[13px] sm:-mb-[17px] transition-colors">Price: Low to High</button>
-              <button className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white pb-3 sm:pb-4 -mb-[13px] sm:-mb-[17px] transition-colors">Newest Arrivals</button>
+              <button className="text-[#6324E2] dark:text-[#A67CFF] border-gray-50 border-b-2 dark:border-[#A67CFF] bg-gray-50 pb-3 sm:pb-4 -mb-[13px] sm:-mb-[17px]">Popularity</button>
+              <button className="text-gray-500 bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white pb-3 sm:pb-4 -mb-[13px] sm:-mb-[17px] transition-colors">Price: Low to High</button>
+              <button className="text-gray-500 bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white pb-3 sm:pb-4 -mb-[13px] sm:-mb-[17px] transition-colors">Newest Arrivals</button>
             </div>
             <div className="hidden sm:flex items-center gap-2">
               <button onClick={() => setViewMode('grid')} className={`p-1.5 rounded-md transition-colors ${viewMode === 'grid' ? 'bg-gray-200 dark:bg-[#1E1E2C] text-[#6324E2] dark:text-[#A67CFF] border border-gray-300 dark:border-[#2A2A38]' : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-300'}`}><Grid size={18} /></button>

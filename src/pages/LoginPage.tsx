@@ -3,6 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import AuthLayout from '../components/AuthLayout';
 
+import Facebook from '/assets/facebook.svg';
+import Google from '/assets/google.svg';
+import Apple from '/assets/apple.svg';
+import Outlook from '/assets/outlook.svg';
+
 const LoginPage = () => {
   const navigate = useNavigate();
   
@@ -45,7 +50,7 @@ const LoginPage = () => {
       leftSubtitle="Multi-layered protection powered by Xentra365 protocols."
     >
       <div className="w-full">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 text-center lg:text-left">Welcome Back</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold dark:text-white text-black mb-2 text-center lg:text-left">Welcome Back</h1>
         <p className="text-gray-400 text-sm mb-8 text-center lg:text-left">Enter your credentials to access your account.</p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -59,7 +64,7 @@ const LoginPage = () => {
               required
               disabled={isLoading}
               placeholder="name@company.com" 
-              className="w-full bg-[#1E1E2C] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder-gray-600 disabled:opacity-50"
+              className="w-full dark:bg-[#1E1E2C] bg-gray-50 border border-gray-700 rounded-lg px-4 py-3 dark:text-white text-black focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder-gray-600 disabled:opacity-50"
             />
           </div>
 
@@ -74,13 +79,13 @@ const LoginPage = () => {
                 required
                 disabled={isLoading}
                 placeholder="••••••••" 
-                className="w-full bg-[#1E1E2C] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder-gray-600 pr-16 disabled:opacity-50"
+                className="w-full dark:bg-[#1E1E2C] bg-gray-50 border border-gray-700 rounded-lg px-4 py-3 dark:text-white text-black focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder-gray-600 pr-16 disabled:opacity-50"
               />
               <button 
                 type="button" 
                 onClick={() => setShowPassword(!showPassword)}
                 disabled={isLoading}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-xs font-bold text-gray-400 hover:text-white transition-colors"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-xs font-bold text-gray-50 bg-[#6324E2] hover:text-white transition-colors px-2 py-1 rounded"
               >
                 {showPassword ? "HIDE" : "SHOW"}
               </button>
@@ -113,32 +118,35 @@ const LoginPage = () => {
 
         <div className="mt-8 mb-6 relative flex items-center justify-center">
           <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-800"></div></div>
-          <div className="relative px-4 bg-[#13131D] text-xs font-bold text-gray-500 uppercase tracking-wider">Or continue with</div>
+          <div className="relative px-4 dark:bg-[#13131D] bg-white text-xs font-bold text-gray-500 uppercase tracking-wider">Or continue with</div>
         </div>
 
-        <div className="flex justify-center gap-4 mb-8">
+        {/* UPDATED: Direct string paths instead of imports */}
+     <div className="flex justify-center gap-4 mb-8">
           {[
-            { name: 'Google', src: '/google.svg' },
-            { name: 'Facebook', src: '/facebook.svg' },
-            { name: 'Outlook', src: '/outlook.svg' },
-            { name: 'Apple', src: '/apple.svg' }
-          ].map((provider, i) => (
+            { name: 'Google', icon: Google, providerId: 'google' },
+            { name: 'Facebook', icon: Facebook, providerId: 'facebook' },
+            { name: 'Outlook', icon: Outlook, providerId: 'microsoft' },
+            { name: 'Apple', icon: Apple, providerId: 'apple' }
+          ].map((provider) => (
             <button 
-              key={i} 
+              key={provider.name} 
               type="button" 
+              onClick={() => {
+                console.log(`Initiating connect with ${provider.name}...`);
+              }}
               disabled={isLoading}
-              className="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center hover:border-gray-500 hover:bg-[#2A2A38] transition-all overflow-hidden disabled:opacity-50"
+              className="bg-transparent border-none p-0 hover:scale-110 hover:opacity-80 transition-all cursor-pointer focus:outline-none flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label={`Log in with ${provider.name}`}
             >
               <img 
-                src={provider.src} 
+                src={provider.icon} 
                 alt={`${provider.name} icon`} 
-                className={`w-5 h-5 object-contain ${provider.name === 'Apple' ? 'invert' : ''}`} 
+                className={`w-6 h-6 sm:w-7 sm:h-7 object-contain ${provider.name === 'Apple' ? 'dark:invert' : ''}`} 
               />
             </button>
           ))}
         </div>
-
         <p className="text-center text-sm text-gray-400">
           Don't have an account? <Link to="/register" className="text-blue-500 font-medium hover:text-blue-400 transition-colors">Create Account</Link>
         </p>

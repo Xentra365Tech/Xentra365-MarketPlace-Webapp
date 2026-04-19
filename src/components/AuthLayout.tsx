@@ -11,10 +11,10 @@ interface AuthLayoutProps {
 
 const AuthLayout = ({ children, leftIcon, leftTitle, leftSubtitle }: AuthLayoutProps) => {
   return (
-    <div className="w-screen min-h-screen bg-purple-700 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
+    <div className="w-screen min-h-screen dark:bg-purple-700 bg-purple-700 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
       
       {/* Back to Home Button */}
-      <Link to="/" className="absolute top-4 left-4 sm:top-6 sm:left-6 flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-black/20 px-4 py-2 rounded-full backdrop-blur-sm text-xs sm:text-sm font-medium z-10 shadow-lg border border-white/10">
+      <Link to="/" className="absolute top-4 left-4 sm:top-6 sm:left-6 flex hover:bg-black items-center gap-2 text-white/80 hover:text-white transition-colors bg-black/20 px-4 py-2 rounded-full backdrop-blur-sm text-xs sm:text-sm font-medium z-10 shadow-lg border border-white/10">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
@@ -22,14 +22,14 @@ const AuthLayout = ({ children, leftIcon, leftTitle, leftSubtitle }: AuthLayoutP
       </Link>
 
       {/* Main Card Container */}
-      <div className="flex flex-col lg:flex-row bg-[#13131D] dark:bg-gray-50 rounded-3xl overflow-hidden max-w-[1000px] w-full shadow-2xl mt-12 sm:mt-0">
+      <div className="flex flex-col lg:flex-row dark:bg-[#13131D] bg-gray-50 rounded-3xl overflow-hidden max-w-[1000px] w-full shadow-2xl mt-12 sm:mt-0">
         
         {/* Left Panel */}
-        <div className="w-full lg:w-[45%] bg-[#1E1E2C] p-8 lg:p-12 flex flex-col items-center justify-center text-center border-b lg:border-b-0 lg:border-r border-gray-800">
+        <div className="w-full lg:w-[45%] dark:bg-[#1E1E2C] bg-gray-50 p-8 lg:p-12 flex flex-col items-center justify-center text-center border-b lg:border-b-0 lg:border-r border-gray-800">
           <div className="w-16 h-16 lg:w-24 lg:h-24 bg-[#2A2A38] rounded-full flex items-center justify-center mb-6 lg:mb-8 text-white">
             {leftIcon}
           </div>
-          <h2 className="text-2xl lg:text-3xl font-bold text-white mb-3 lg:mb-4 leading-tight">{leftTitle}</h2>
+          <h2 className="text-2xl lg:text-3xl font-bold dark:text-white text-gray-950 mb-3 lg:mb-4 leading-tight">{leftTitle}</h2>
           <p className="text-gray-400 text-sm lg:text-base">{leftSubtitle}</p>
         </div>
 
@@ -58,7 +58,7 @@ const AuthLayout = ({ children, leftIcon, leftTitle, leftSubtitle }: AuthLayoutP
       </div>
       
       {/* Bottom Copyright */}
-      <div className="absolute bottom-4 text-[10px] sm:text-xs text-white/50 text-center w-full px-4">
+      <div className="absolute bottom-4 text-[10px] sm:text-xs dark:text-white/50 text-gray-500 text-center w-full px-4">
         © 2026 Xentra365 Digital Marketplace. All rights reserved.
       </div>
     </div>

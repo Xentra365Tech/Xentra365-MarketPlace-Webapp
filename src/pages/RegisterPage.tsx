@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ChevronDown, Eye, EyeOff, Loader2 } from 'lucide-react';
 import AuthLayout from '../components/AuthLayout';
+import Facebook from '/assets/facebook.svg';
+import Google from '/assets/google.svg';
+import Apple from '/assets/apple.svg';
+import Outlook from '/assets/outlook.svg';
 
 const COUNTRIES = [
   { code: '+1', label: 'USA' },
@@ -79,7 +83,7 @@ const RegisterPage = () => {
       leftSubtitle="Redefining digital trade with uncompromising security."
     >
       <div className="w-full">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 text-center lg:text-left">Create Account</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold dark:text-white text-gray-950 mb-2 text-center lg:text-left">Create Account</h1>
         <p className="text-gray-400 text-sm mb-8 text-center lg:text-left">Fill in your details to start trading securely.</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -87,7 +91,7 @@ const RegisterPage = () => {
             <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Full Name</label>
             <input 
               type="text" name="fullName" value={formData.fullName} onChange={handleInputChange} required disabled={isLoading}
-              placeholder="John Doe" className="w-full bg-[#1E1E2C] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 transition-all placeholder-gray-600 disabled:opacity-50"
+              placeholder="John Doe" className="w-full  dark:bg-[#1E1E2C] bg-gray-50 border border-gray-700 rounded-lg px-4 py-3 dark:text-white text-black focus:outline-none focus:border-purple-500 transition-all placeholder-gray-600 disabled:opacity-50"
             />
           </div>
 
@@ -96,7 +100,7 @@ const RegisterPage = () => {
             <input 
               type="email" name="email" value={formData.email} onChange={handleInputChange} required disabled={isLoading}
               placeholder="name@example.com" 
-              className={`w-full bg-[#1E1E2C] border rounded-lg px-4 py-3 text-white focus:outline-none transition-all placeholder-gray-600 disabled:opacity-50 ${
+              className={`w-full dark:bg-[#1E1E2C] bg-gray-50 border border-gray-700 rounded-lg px-4 py-3 dark:text-white text-black focus:outline-none transition-all placeholder-gray-600 disabled:opacity-50 ${
                 isEmailInvalid ? 'border-red-500 focus:border-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'border-gray-700 focus:border-purple-500'
               }`}
             />
@@ -108,20 +112,20 @@ const RegisterPage = () => {
               <div className="relative w-full sm:w-32">
                 <button 
                   type="button" onClick={() => !isLoading && setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-full bg-[#1E1E2C] border border-gray-700 hover:border-gray-500 rounded-lg px-3 py-3 text-white flex items-center justify-between transition-all disabled:opacity-50"
+                  className="w-full dark:bg-[#1E1E2C] bg-gray-50 border border-gray-700 hover:border-gray-500 rounded-lg px-3 py-3 dark:text-white text-black flex items-center justify-between transition-all disabled:opacity-50"
                 >
                   <span className="text-sm font-medium">{selectedCountry.code}</span>
                   <ChevronDown size={14} className={`text-gray-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {isDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-full bg-[#2A2A38] border border-gray-700 rounded-lg shadow-2xl z-50 overflow-y-auto max-h-60 no-scrollbar">
+                  <div className="absolute top-full left-0 mt-2 w-full dark: bg-[#2A2A38] bg-gray-50  rounded-lg shadow-2xl z-50 overflow-y-auto max-h-60 no-scrollbar">
                     {COUNTRIES.map((country, index) => (
                       <button
                         key={index} type="button"
                         onClick={() => { setSelectedCountry(country); setIsDropdownOpen(false); }}
-                        className="w-full text-left px-4 py-2.5 hover:bg-[#6324E2] text-sm font-medium text-white border-b border-gray-700/50 last:border-0"
+                        className="w-full text-left bg-gray-50 dark:bg-[#2A2A38] px-4 py-2.5 dark:hover:bg-[#6324E2] hover:bg-[#6324E2] text-sm font-medium dark:text-white text-black border-b border-gray-700/50 last:border-0"
                       >
-                        {country.code} <span className="text-xs text-gray-400 ml-2">{country.label}</span>
+                        {country.code} <span className="text-xs text-gray-950 ml-2">{country.label}</span>
                       </button>
                     ))}
                   </div>
@@ -129,7 +133,7 @@ const RegisterPage = () => {
               </div>
               <input 
                 type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required disabled={isLoading}
-                placeholder="(555) 000-0000" className="flex-1 bg-[#1E1E2C] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 transition-all placeholder-gray-600 w-full disabled:opacity-50"
+                placeholder="(555) 000-0000" className="flex-1 dark:bg-[#1E1E2C] bg-gray-50 border border-gray-700 rounded-lg px-4 py-3 dark:text-white text-black focus:outline-none focus:border-purple-500 transition-all placeholder-gray-600 w-full disabled:opacity-50"
               />
             </div>
           </div>
@@ -139,18 +143,18 @@ const RegisterPage = () => {
             <div className="relative mb-2">
               <input 
                 type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleInputChange} required disabled={isLoading}
-                placeholder="••••••••" className="w-full bg-[#1E1E2C] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-500 transition-all placeholder-gray-600 pr-12 disabled:opacity-50"
+                placeholder="••••••••" className="w-full dark:bg-[#1E1E2C] bg-gray-50 border border-gray-700 rounded-lg px-4 py-3 dark:text-white text-black focus:outline-none focus:border-purple-500 transition-all placeholder-gray-600 pr-12 disabled:opacity-50"
               />
               <button 
                 type="button" onClick={() => setShowPassword(!showPassword)} disabled={isLoading}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                className="absolute right-4 top-1/2 bg-gray-50 dark:bg-[#1E1E2C] transform -translate-y-1/2 text-gray-400 dark:hover:text-white hover:text-black transition-colors"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
             <div className="flex items-center gap-1.5 mb-1">
               {[1, 2, 3, 4].map((level) => (
-                <div key={level} className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${getStrengthColor(level)}`}></div>
+                <div key={level} className={`h-1.5 flex-1 rounded-full transition-all  duration-300 ${getStrengthColor(level)}`}></div>
               ))}
             </div>
           </div>
@@ -168,21 +172,34 @@ const RegisterPage = () => {
 
         <div className="mt-6 mb-6 relative flex items-center justify-center">
           <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-800"></div></div>
-          <div className="relative px-4 bg-[#13131D] text-xs font-bold text-gray-500 uppercase tracking-wider">Or continue with</div>
+          <div className="relative px-4 dark:bg-[#13131D] bg-white text-xs font-bold dark:text-gray-500 text-gray-500 uppercase tracking-wider">Or continue with</div>
         </div>
 
-        <div className="flex justify-center gap-4 mb-6">
-          {[
-            { name: 'Google', src: '/google.svg' },
-            { name: 'Facebook', src: '/facebook.svg' },
-            { name: 'Outlook', src: '/outlook.svg' },
-            { name: 'Apple', src: '/apple.svg' }
-          ].map((provider, i) => (
-            <button key={i} type="button" disabled={isLoading} className="w-10 h-10 rounded-full bg-[#1E1E2C] border border-gray-700 flex items-center justify-center text-gray-400 hover:border-gray-500 hover:bg-[#2A2A38] transition-all overflow-hidden disabled:opacity-50">
-               <img src={provider.src} alt={`${provider.name} icon`} className={`w-5 h-5 object-contain ${provider.name === 'Apple' ? 'invert' : ''}`} />
-            </button>
-          ))}
-        </div>
+        <div className="flex justify-center gap-4 mb-8">
+                  {[
+                    { name: 'Google', icon: Google, providerId: 'google' },
+                    { name: 'Facebook', icon: Facebook, providerId: 'facebook' },
+                    { name: 'Outlook', icon: Outlook, providerId: 'microsoft' },
+                    { name: 'Apple', icon: Apple, providerId: 'apple' }
+                  ].map((provider) => (
+                    <button 
+                      key={provider.name} 
+                      type="button" 
+                      onClick={() => {
+                        console.log(`Initiating connect with ${provider.name}...`);
+                      }}
+                      disabled={isLoading}
+                      className="bg-transparent border-none p-0 hover:scale-110 hover:opacity-80 transition-all cursor-pointer focus:outline-none flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                      aria-label={`Log in with ${provider.name}`}
+                    >
+                      <img 
+                        src={provider.icon} 
+                        alt={`${provider.name} icon`} 
+                        className={`w-6 h-6 sm:w-7 sm:h-7 object-contain ${provider.name === 'Apple' ? 'dark:invert' : ''}`} 
+                      />
+                    </button>
+                  ))}
+                </div>
 
         <p className="text-center text-sm text-gray-400">
           Already have an account? <Link to="/login" className="text-blue-500 font-medium hover:text-blue-400 transition-colors">Login here</Link>
