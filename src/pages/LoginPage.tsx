@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
 import AuthLayout from '../components/AuthLayout';
 
 import Facebook from '/assets/facebook.svg';
@@ -82,12 +82,11 @@ const LoginPage = () => {
                 className="w-full dark:bg-[#1E1E2C] bg-gray-50 border border-gray-700 rounded-lg px-4 py-3 dark:text-white text-black focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder-gray-600 pr-16 disabled:opacity-50"
               />
               <button 
-                type="button" 
-                onClick={() => setShowPassword(!showPassword)}
-                disabled={isLoading}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-xs font-bold text-gray-50 bg-[#6324E2] hover:text-white transition-colors px-2 py-1 rounded"
+               type="button" 
+               onClick={() => setShowPassword(!showPassword)}
+               className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white"
               >
-                {showPassword ? "HIDE" : "SHOW"}
+               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>

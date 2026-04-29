@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
-  Search, ShoppingCart, User, ChevronRight, ChevronDown, 
+  Search, ShoppingCart, User, ChevronDown, 
   Menu, X, ShieldCheck, Sun, Moon, LogOut, Grid 
 } from 'lucide-react';
 import { CATEGORIES, ALL_PRODUCTS } from '../data/mockData';
@@ -9,7 +9,13 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
-const Header = () => {
+// 1. ADDED PROPS to interface with the parent layout
+interface HeaderProps {
+  isSidebarOpen?: boolean;
+  toggleSidebar?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ isSidebarOpen, toggleSidebar }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { cartCount } = useCart();
@@ -17,7 +23,8 @@ const Header = () => {
   const { isDarkMode, toggleTheme } = useTheme();
   
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(false);
+  
+  // Removed isDesktopSidebarOpen state (now handled by parent)
   
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [expandedSubcategories, setExpandedSubcategories] = useState<string[]>([]);
@@ -56,10 +63,15 @@ const Header = () => {
 
   return (
     <>
-      <nav className="bg-white dark:bg-[#12121D] border-b border-gray-200 dark:border-[#2A2A38] sticky top-0 z-50 shadow-md flex flex-col transition-colors">
+      {/* Fallback sticky for pages that haven't implemented the new layout wrapper yet */}
+      <nav className="bg-white dark:bg-[#12121D] border-b border-gray-200 dark:border-[#2A2A38] sticky top-0 z-50 shadow-md flex flex-col transition-colors w-full">
         <div className="max-w-[1600px] w-full mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-4">
-          <div className="flex items-center justify-between gap-3 lg:gap-8">
-            <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+          
+          {/* TOP ROW */}
+          <div className="flex items-center justify-between gap-3 lg:gap-8 w-full">
+            
+            {/* LEFT: Logo (Fixed Width for centering balance) */}
+            <div className="flex items-center gap-2 sm:gap-4 lg:w-[250px] shrink-0">
               <button 
                 className="lg:hidden p-1.5 sm:p-2 rounded-lg bg-gray-100 text-gray-700 dark:bg-[#1E1E2C] dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#2A2A38] transition-colors" 
                 onClick={() => setIsMobileMenuOpen(true)}
@@ -72,7 +84,8 @@ const Header = () => {
               </Link>
             </div>
 
-            <form onSubmit={handleSearch} className="hidden lg:flex flex-1 max-w-3xl relative">
+            {/* CENTER: Search Bar */}
+            <form onSubmit={handleSearch} className="hidden lg:flex flex-1 max-w-3xl relative mx-auto">
               <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input type="text" placeholder="Search products, brands and categories..." value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setShowDropdown(true); }} onFocus={() => setShowDropdown(true)} className="w-full bg-gray-100 dark:bg-[#1E1E2C] border border-gray-300 dark:border-[#2A2A38] rounded-full py-3 pl-14 pr-32 focus:outline-none focus:border-[#6324E2] transition-colors text-sm text-gray-900 dark:text-white" />
               <button type="submit" className="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[#6324E2] px-8 py-2 rounded-full font-bold text-sm text-white hover:bg-[#501bb8] transition-colors shadow-lg">SEARCH</button>
@@ -91,7 +104,8 @@ const Header = () => {
               )}
             </form>
 
-            <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 shrink-0">
+            {/* RIGHT: Icons (Fixed Width for centering balance) */}
+            <div className="flex items-center justify-end gap-3 sm:gap-4 lg:gap-6 lg:w-[250px] shrink-0">
               <button onClick={toggleTheme} className="p-1.5 sm:p-2 rounded-full bg-gray-100 dark:bg-[#1E1E2C] text-gray-600 dark:text-gray-400 hover:text-[#6324E2] dark:hover:text-white transition-colors">
                 {isDarkMode ? <Sun className="w-4 h-4 sm:w-5 sm:h-5" /> : <Moon className="w-4 h-4 sm:w-5 sm:h-5" />}
               </button>
@@ -138,7 +152,7 @@ const Header = () => {
             </div>
           </div>
           
-          {/* RESPONSIVE: Tightened Mobile Search Padding */}
+          {/* MOBILE SEARCH */}
           <div className="flex lg:hidden mt-3 sm:mt-4 w-full relative z-[55]">
             <form onSubmit={handleSearch} className="relative w-full">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
@@ -147,61 +161,36 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="hidden lg:flex items-center justify-center px-8 py-3 bg-gray-50 dark:bg-[#0A0A11] border-b border-gray-200 dark:border-[#2A2A38] text-sm relative transition-colors">
-           <div className="flex items-center gap-8 font-bold text-gray-700 dark:text-gray-400">
-             <button onClick={() => setIsDesktopSidebarOpen(!isDesktopSidebarOpen)} className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-colors ${isDesktopSidebarOpen ? 'bg-[#6324E2] text-white' : 'bg-gray-200 text-gray-800 dark:bg-[#1E1E2C] dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-[#2A2A38]'}`}>
-               <Menu size={18}/> All Categories {isDesktopSidebarOpen ? <ChevronDown size={14}/> : <ChevronRight size={14}/>}
+        {/* BOTTOM NAV ROW */}
+        <div className="hidden lg:flex items-center justify-between px-8 bg-gray-50 dark:bg-[#0A0A11] border-b border-gray-200 dark:border-[#2A2A38] text-sm relative transition-colors h-[52px]">
+           
+           {/* LEFT: Category Toggle Button */}
+           <div className="w-[200px] shrink-0 flex">
+             <button 
+               onClick={toggleSidebar} 
+               className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-colors ${isSidebarOpen ? 'bg-[#6324E2] text-white' : 'bg-gray-200 text-gray-800 dark:bg-[#1E1E2C] dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-[#2A2A38]'}`}
+             >
+               <Menu size={18}/> All Categories
              </button>
-             <Link to="/" className="hover:text-[#6324E2] dark:hover:text-white transition-colors">Home</Link>
-             <Link to="/dashboard" className="text-[#6324E2] dark:text-[#A67CFF] border-b-2 border-[#6324E2] dark:border-[#A67CFF] pb-1">Dashboard</Link>
-             {/* <Link to="/seller/register" className="hover:text-[#6324E2] dark:hover:text-white transition-colors">Xentra Sellers</Link> */}
-             <Link to="#" className="hover:text-[#6324E2] dark:hover:text-white transition-colors">Local Marketplace</Link>
-             {/* <Link to="#" className="hover:text-[#6324E2] dark:hover:text-white transition-colors">International Marketplace</Link> */}
-             <Link to="#" className="hover:text-[#6324E2] dark:hover:text-white transition-colors flex items-center gap-1">Promotions <span className="bg-orange-500 text-white text-[10px] px-1.5 py-0.5 rounded-sm">HOT</span></Link>
-             <Link to="#" className="hover:text-[#6324E2] dark:hover:text-white transition-colors">Bulk Wholesale</Link>
            </div>
+
+           {/* CENTER: Navigation Links */}
+           <nav className="flex-1 flex items-center justify-center gap-8 font-bold text-gray-700 dark:text-gray-400 h-full">
+             <Link to="/" className="hover:text-[#6324E2] dark:hover:text-white transition-colors h-full flex items-center border-b-2 border-transparent hover:border-[#6324E2]">Home</Link>
+             <Link to="/dashboard" className="text-[#6324E2] dark:text-[#A67CFF] border-b-2 border-[#6324E2] dark:border-[#A67CFF] h-full flex items-center">Dashboard</Link>
+             <Link to="#" className="hover:text-[#6324E2] dark:hover:text-white transition-colors h-full flex items-center border-b-2 border-transparent hover:border-[#6324E2]">Local Marketplace</Link>
+             <Link to="#" className="hover:text-[#6324E2] dark:hover:text-white transition-colors h-full flex items-center gap-1 border-b-2 border-transparent hover:border-[#6324E2]">
+                Promotions <span className="bg-orange-500 text-white text-[10px] px-1.5 py-0.5 rounded-sm">HOT</span>
+             </Link>
+             <Link to="#" className="hover:text-[#6324E2] dark:hover:text-white transition-colors h-full flex items-center border-b-2 border-transparent hover:border-[#6324E2]">Bulk Wholesale</Link>
+           </nav>
+
+           {/* RIGHT: Invisible Spacer to balance Flexbox centering */}
+           <div className="w-[200px] shrink-0"></div>
         </div>
       </nav>
 
-      {/* DESKTOP SIDEBAR */}
-      <aside className={`fixed top-[130px] left-0 h-[calc(100vh-130px)] w-[280px] bg-white dark:bg-[#12121D] border-r border-gray-200 dark:border-[#2A2A38] z-[40] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] hidden lg:block transition-transform duration-300 ease-in-out shadow-lg ${isDesktopSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="py-2 flex flex-col relative h-full">
-          {CATEGORIES.map((category) => {
-            const isCategoryOpen = expandedCategories.includes(category.id);
-            return (
-              <div key={category.id} className="w-full flex flex-col">
-                <button onClick={() => toggleCategory(category.id)} className={`w-full flex items-center justify-between px-6 py-4 text-sm transition-colors font-bold ${isCategoryOpen ? 'bg-gray-100 text-[#6324E2] dark:bg-[#1E1E2C] dark:text-[#A67CFF]' : 'bg-white text-gray-800 dark:bg-[#12121D] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a1a24]'}`}>
-                  <div className="flex items-center gap-3"><span className={isCategoryOpen ? 'text-[#6324E2] dark:text-[#A67CFF]' : 'text-gray-500'}>{category.icon}</span>{category.name}</div>
-                  {category.subcategories && <ChevronDown size={16} className={`transition-transform duration-200 ${isCategoryOpen ? 'rotate-180 text-[#6324E2] dark:text-[#A67CFF]' : 'text-gray-400'}`} />}
-                </button>
-                {isCategoryOpen && category.subcategories && (
-                  <div className="flex flex-col bg-gray-50 dark:bg-[#0A0A11] border-y border-gray-200 dark:border-[#2A2A38]">
-                    {Object.entries(category.subcategories).map(([title, items], idx) => {
-                      const isSubOpen = expandedSubcategories.includes(title);
-                      return (
-                        <div key={idx} className="flex flex-col">
-                          <button onClick={() => toggleSubcategory(title)} className={`flex items-center justify-between w-full px-8 py-3 text-xs font-bold uppercase tracking-wider transition-colors ${isSubOpen ? 'bg-gray-200 text-gray-900 dark:bg-[#2A2A38] dark:text-white' : 'bg-gray-50 text-gray-600 dark:bg-[#0A0A11] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#1E1E2C]'}`}>
-                            {title} <ChevronDown size={14} className={`transition-transform duration-200 ${isSubOpen ? 'rotate-180 text-[#6324E2] dark:text-[#A67CFF]' : 'text-gray-500'}`} />
-                          </button>
-                          {isSubOpen && (
-                            <ul className="flex flex-col py-1 pb-3 bg-white dark:bg-[#12121D] shadow-inner">
-                              {items.map((item: string, itemIdx: number) => (
-                                <li key={itemIdx}><a href="#" className="block px-10 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#6324E2] dark:hover:text-[#A67CFF] transition-colors hover:bg-gray-50 dark:hover:bg-[#1E1E2C]/50">{item}</a></li>
-                              ))}
-                            </ul>
-                          )}
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
-      </aside>
-
-      {/* MOBILE DRAWER */}
+      {/* MOBILE DRAWER (Kept intact for smaller screens) */}
       {isMobileMenuOpen && <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] lg:hidden" onClick={() => setIsMobileMenuOpen(false)} />}
       <aside className={`fixed top-0 left-0 h-full w-[300px] bg-white dark:bg-[#12121D] border-r border-gray-200 dark:border-[#2A2A38] z-[70] flex flex-col transform transition-transform duration-300 ease-in-out lg:hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="h-20 flex items-center justify-between px-6 border-b border-gray-200 dark:border-[#2A2A38] shrink-0 bg-gray-50 dark:bg-[#0A0A11]">

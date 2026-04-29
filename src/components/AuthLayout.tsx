@@ -25,7 +25,7 @@ const AuthLayout = ({ children, leftIcon, leftTitle, leftSubtitle }: AuthLayoutP
       <div className="flex flex-col lg:flex-row dark:bg-[#13131D] bg-gray-50 rounded-3xl overflow-hidden max-w-[1000px] w-full shadow-2xl mt-12 sm:mt-0">
         
         {/* Left Panel */}
-        <div className="w-full lg:w-[45%] dark:bg-[#1E1E2C] bg-gray-50 p-8 lg:p-12 flex flex-col items-center justify-center text-center border-b lg:border-b-0 lg:border-r border-gray-800">
+        <div className="w-full lg:w-[45%] dark:bg-[#1E1E2C] bg-gray-50 p-8 lg:p-12 hidden lg:flex flex-col items-center justify-center text-center border-b lg:border-b-0 lg:border-r border-gray-800">
           <div className="w-16 h-16 lg:w-24 lg:h-24 bg-[#2A2A38] rounded-full flex items-center justify-center mb-6 lg:mb-8 text-white">
             {leftIcon}
           </div>
@@ -58,7 +58,7 @@ const AuthLayout = ({ children, leftIcon, leftTitle, leftSubtitle }: AuthLayoutP
       </div>
       
       {/* Bottom Copyright */}
-      <div className="absolute bottom-4 text-[10px] sm:text-xs dark:text-white/50 text-gray-500 text-center w-full px-4">
+      <div className="absolute bottom-6 text-[10px] sm:text-xs dark:text-white/50 text-gray-500 text-center w-full px-4">
         © 2026 Xentra365 Digital Marketplace. All rights reserved.
       </div>
     </div>
